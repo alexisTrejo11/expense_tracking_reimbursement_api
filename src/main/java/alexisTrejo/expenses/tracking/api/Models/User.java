@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Data
 @NoArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -37,6 +38,9 @@ public class User {
     private String department;
 
     @Column(nullable = false)
+    private LocalDateTime lastLogin;
+
+    @Column(nullable = false)
     private Boolean active = true;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -51,4 +55,8 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+
+    public void updateLastLogin() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
