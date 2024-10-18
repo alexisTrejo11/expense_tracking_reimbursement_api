@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.DTOs;
+package alexisTrejo.expenses.tracking.api.DTOs.Auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

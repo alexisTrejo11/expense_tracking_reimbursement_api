@@ -1,8 +1,8 @@
 package alexisTrejo.expenses.tracking.api.Mappers;
 
-import alexisTrejo.expenses.tracking.api.DTOs.ProfileDTO;
-import alexisTrejo.expenses.tracking.api.DTOs.UserDTO;
-import alexisTrejo.expenses.tracking.api.DTOs.UserInsertDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.User.ProfileDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.Auth.UserInsertDTO;
 import alexisTrejo.expenses.tracking.api.Models.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,7 +16,7 @@ public interface UserMapper {
     @Mapping(target = "lastLogin", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "expenses", ignore = true)
     @Mapping(target = "notifications", ignore = true)
-    User insertDtoToEntity(UserInsertDTO studentInsertDTO);
+    User insertDtoToEntity(UserInsertDTO userInsertDTO);
 
     UserDTO entityToDTO(User user);
     ProfileDTO entityToProfileDTO(User user);
@@ -25,5 +25,5 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "expenses", ignore = true)
     @Mapping(target = "notifications", ignore = true)
-    void updateUser(@MappingTarget User student, UserInsertDTO studentInsertDTO);
+    void updateUser(@MappingTarget User user, UserInsertDTO userInsertDTO);
 }

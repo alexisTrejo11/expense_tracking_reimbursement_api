@@ -1,8 +1,8 @@
 package alexisTrejo.expenses.tracking.api.Controller;
 
-import alexisTrejo.expenses.tracking.api.DTOs.LoginDTO;
-import alexisTrejo.expenses.tracking.api.DTOs.UserDTO;
-import alexisTrejo.expenses.tracking.api.DTOs.UserInsertDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.Auth.LoginDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.Auth.UserInsertDTO;
 import alexisTrejo.expenses.tracking.api.Models.enums.Role;
 import alexisTrejo.expenses.tracking.api.Service.AuthService;
 import alexisTrejo.expenses.tracking.api.Service.UserService;

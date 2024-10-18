@@ -1,10 +1,7 @@
-package alexisTrejo.expenses.tracking.api.DTOs;
+package alexisTrejo.expenses.tracking.api.DTOs.Auth;
 
-import alexisTrejo.expenses.tracking.api.Models.enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

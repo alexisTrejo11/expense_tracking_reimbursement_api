@@ -1,7 +1,6 @@
 package alexisTrejo.expenses.tracking.api.Controller;
 
-import alexisTrejo.expenses.tracking.api.DTOs.ProfileDTO;
-import alexisTrejo.expenses.tracking.api.DTOs.UserDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.User.ProfileDTO;
 import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
 import alexisTrejo.expenses.tracking.api.Service.UserService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;

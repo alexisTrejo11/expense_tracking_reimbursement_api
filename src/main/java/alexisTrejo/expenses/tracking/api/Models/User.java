@@ -55,6 +55,9 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    public User(Long id) {
+        this.id = id;
+    }
 
     public void updateLastLogin() {
         this.updatedAt = LocalDateTime.now();

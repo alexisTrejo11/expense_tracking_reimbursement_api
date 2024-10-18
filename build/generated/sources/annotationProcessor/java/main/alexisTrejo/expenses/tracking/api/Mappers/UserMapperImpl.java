@@ -1,33 +1,33 @@
 package alexisTrejo.expenses.tracking.api.Mappers;
 
-import alexisTrejo.expenses.tracking.api.DTOs.ProfileDTO;
-import alexisTrejo.expenses.tracking.api.DTOs.UserDTO;
-import alexisTrejo.expenses.tracking.api.DTOs.UserInsertDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.Auth.UserInsertDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.User.ProfileDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
 import alexisTrejo.expenses.tracking.api.Models.User;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-18T13:02:02-0600",
+    date = "2024-10-18T15:14:35-0600",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.9.jar, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
 public class UserMapperImpl implements UserMapper {
 
     @Override
-    public User insertDtoToEntity(UserInsertDTO studentInsertDTO) {
-        if ( studentInsertDTO == null ) {
+    public User insertDtoToEntity(UserInsertDTO userInsertDTO) {
+        if ( userInsertDTO == null ) {
             return null;
         }
 
         User user = new User();
 
-        user.setEmail( studentInsertDTO.getEmail() );
-        user.setPassword( studentInsertDTO.getPassword() );
-        user.setFirstName( studentInsertDTO.getFirstName() );
-        user.setLastName( studentInsertDTO.getLastName() );
-        user.setDepartment( studentInsertDTO.getDepartment() );
+        user.setEmail( userInsertDTO.getEmail() );
+        user.setPassword( userInsertDTO.getPassword() );
+        user.setFirstName( userInsertDTO.getFirstName() );
+        user.setLastName( userInsertDTO.getLastName() );
+        user.setDepartment( userInsertDTO.getDepartment() );
 
         user.setCreatedAt( java.time.LocalDateTime.now() );
         user.setUpdatedAt( java.time.LocalDateTime.now() );
@@ -73,17 +73,17 @@ public class UserMapperImpl implements UserMapper {
     }
 
     @Override
-    public void updateUser(User student, UserInsertDTO studentInsertDTO) {
-        if ( studentInsertDTO == null ) {
+    public void updateUser(User user, UserInsertDTO userInsertDTO) {
+        if ( userInsertDTO == null ) {
             return;
         }
 
-        student.setEmail( studentInsertDTO.getEmail() );
-        student.setPassword( studentInsertDTO.getPassword() );
-        student.setFirstName( studentInsertDTO.getFirstName() );
-        student.setLastName( studentInsertDTO.getLastName() );
-        student.setDepartment( studentInsertDTO.getDepartment() );
+        user.setEmail( userInsertDTO.getEmail() );
+        user.setPassword( userInsertDTO.getPassword() );
+        user.setFirstName( userInsertDTO.getFirstName() );
+        user.setLastName( userInsertDTO.getLastName() );
+        user.setDepartment( userInsertDTO.getDepartment() );
 
-        student.setUpdatedAt( java.time.LocalDateTime.now() );
+        user.setUpdatedAt( java.time.LocalDateTime.now() );
     }
 }

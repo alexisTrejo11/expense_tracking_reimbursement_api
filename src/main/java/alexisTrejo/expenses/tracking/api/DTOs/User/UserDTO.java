@@ -1,14 +1,16 @@
-package alexisTrejo.expenses.tracking.api.DTOs;
+package alexisTrejo.expenses.tracking.api.DTOs.User;
 
 import alexisTrejo.expenses.tracking.api.Models.enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Data
-public class UserDTO extends  ProfileDTO {
+public class UserDTO extends ProfileDTO {
     @JsonProperty("id")
     private Long id;
 
