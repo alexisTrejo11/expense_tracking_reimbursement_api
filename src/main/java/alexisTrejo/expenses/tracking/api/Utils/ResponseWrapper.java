@@ -68,5 +68,15 @@ public class ResponseWrapper<T> {
         );
     }
 
+    public static <T> ResponseWrapper<T> unauthorized(String message) {
+        return new ResponseWrapper<>(
+                false,
+                null,
+                message,
+                HttpStatus.UNAUTHORIZED.value(),
+                LocalDateTime.now()
+        );
+    }
+
 }
 

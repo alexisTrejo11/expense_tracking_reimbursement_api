@@ -1,9 +1,7 @@
 package alexisTrejo.expenses.tracking.api.Middleware;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
+import alexisTrejo.expenses.tracking.api.Utils.Result;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -14,6 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Component
 public class JWTSecurity {
@@ -39,18 +38,26 @@ public class JWTSecurity {
                 .compact();
     }
 
-    public Claims validateToken(String token) {
+    public Result<Claims> validateToken(String token) {
         try {
-            return Jwts.parserBuilder()
+            Claims claims = Jwts.parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
+            return Result.success(claims);
+        } catch (ExpiredJwtException e) {
+            // JWT token has expired
+            return Result.error("Token expired at " + e.getClaims().getExpiration());
         } catch (SignatureException e) {
             // Invalid signature/claims
-            return null;
+            return Result.error("Invalid Token");
+        } catch (Exception e) {
+            // Any other exception related to token parsing
+            return Result.error("Token parsing error");
         }
     }
+
 
     public Long getUserId(Claims claims) {
         return Long.parseLong(claims.getSubject());
@@ -61,28 +68,34 @@ public class JWTSecurity {
         return (List<String>) claims.get("roles");
     }
 
-    public Claims getClaimsFromToken(HttpServletRequest request) {
+    public Result<Claims> getClaimsFromToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
             String token = header.substring(7); // Remove "Bearer " prefix
-            return validateToken(token);
+
+            Result<Claims> claimsResult = validateToken(token);
+            if (!claimsResult.isSuccess()) {
+                return Result.error(claimsResult.getErrorMessage());
+            }
+
+            return Result.success(claimsResult.getData());
         }
-        return null;
+        return Result.error("Invalid Header Format");
     }
 
-    public Long getUserIdFromToken(HttpServletRequest request) {
-        Claims claims = getClaimsFromToken(request);
-        if (claims != null) {
-            return getUserId(claims);
+    public Result<Long> getUserIdFromToken(HttpServletRequest request) {
+        Result<Claims> claimsResult = getClaimsFromToken(request);
+        if (!claimsResult.isSuccess()) {
+            return Result.error(claimsResult.getErrorMessage());
         }
-        return null;
+        return Result.success(getUserId(claimsResult.getData()));
     }
 
-    public List<String> getRolesFromToken(HttpServletRequest request) {
-        Claims claims = getClaimsFromToken(request);
-        if (claims != null) {
-            return getRoles(claims);
+    public Result<List<String>> getRolesFromToken(HttpServletRequest request) {
+        Result<Claims> claimsResult = getClaimsFromToken(request);
+        if (!claimsResult.isSuccess()) {
+            return Result.error(claimsResult.getErrorMessage());
         }
-        return null;
+        return Result.success(getRoles(claimsResult.getData()));
     }
 }

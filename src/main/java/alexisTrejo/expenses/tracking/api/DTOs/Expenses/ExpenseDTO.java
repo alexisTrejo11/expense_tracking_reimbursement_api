@@ -4,16 +4,13 @@ import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseCategory;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
-
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ExpenseDTO {
 
     @JsonProperty("id")
@@ -42,4 +39,5 @@ public class ExpenseDTO {
 
     @JsonProperty("rejection_reason")
     private String rejectionReason;
+
 }

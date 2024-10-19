@@ -4,6 +4,7 @@ import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseInsertDTO;
 import alexisTrejo.expenses.tracking.api.Mappers.ExpenseMapper;
 import alexisTrejo.expenses.tracking.api.Models.Expense;
+import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Repository.ExpenseRepository;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+
 import java.util.Optional;
 
 @Service
@@ -41,12 +42,20 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
 
+    public Page<ExpenseDTO> GetAllExpenseByStatus(ExpenseStatus expenseStatus, Pageable sortedPageable) {
+        Page<Expense> expenses = expenseRepository.findByStatus(expenseStatus, sortedPageable);
+
+        return expenses.map(expenseMapper::entityToDTO);
+    }
+
+
     @Override
     @Transactional
-    public void CreateExpense(ExpenseInsertDTO expenseInsertDTO, Long userId) {
+    public void CreateExpense(ExpenseInsertDTO expenseInsertDTO, Long userId, ExpenseStatus expenseStatus) {
         Expense expense = expenseMapper.insertDtoToEntity(expenseInsertDTO);
+        expense.setStatus(expenseStatus);
+        expense.setUserId(userId);
 
-        expense.setUserRelationShipIds(userId, expenseInsertDTO.getApprovedById());
         expenseRepository.saveAndFlush(expense);
     }
 

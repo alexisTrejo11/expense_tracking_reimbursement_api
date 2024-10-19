@@ -26,12 +26,12 @@ public class UserController {
 
     @GetMapping("/my-profile")
     public ResponseEntity<ResponseWrapper<ProfileDTO>> getMyProfile(HttpServletRequest request) {
-        Long userId = jwtSecurity.getUserIdFromToken(request);
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.error("Unauthorized", HttpStatus.UNAUTHORIZED.value()));
+        Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
+        if (!userIdResult.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
         }
 
-        Result<ProfileDTO> userResult = userService.getProfileById(userId);
+        Result<ProfileDTO> userResult = userService.getProfileById(userIdResult.getData());
         if (!userResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.error(userResult.getErrorMessage(), HttpStatus.NOT_FOUND.value()));
         }

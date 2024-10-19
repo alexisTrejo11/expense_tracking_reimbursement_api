@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-18T15:13:43-0600",
+    date = "2024-10-18T21:27:41-0600",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.9.jar, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
@@ -23,6 +23,13 @@ public class ExpenseMapperImpl implements ExpenseMapper {
         }
 
         Expense expense = new Expense();
+
+        expense.setAmount( expenseInsertDTO.getAmount() );
+        expense.setCategory( expenseInsertDTO.getCategory() );
+        expense.setDescription( expenseInsertDTO.getDescription() );
+        expense.setDate( expenseInsertDTO.getDate() );
+        expense.setReceiptUrl( expenseInsertDTO.getReceiptUrl() );
+        expense.setRejectionReason( expenseInsertDTO.getRejectionReason() );
 
         expense.setCreatedAt( java.time.LocalDateTime.now() );
         expense.setUpdatedAt( java.time.LocalDateTime.now() );

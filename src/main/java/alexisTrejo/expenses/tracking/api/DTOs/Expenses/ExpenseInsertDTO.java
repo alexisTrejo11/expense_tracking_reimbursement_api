@@ -9,17 +9,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ExpenseInsertDTO {
 
     @JsonProperty("amount")
@@ -43,14 +41,6 @@ public class ExpenseInsertDTO {
 
     @JsonProperty("receipt_url")
     private String receiptUrl;
-
-    @JsonProperty("status")
-    @Enumerated(EnumType.ORDINAL)
-    @NotNull(message = "status Is Obligatory")
-    private ExpenseStatus status;
-
-    @JsonProperty("approved_by_id")
-    private Long approvedById;
 
     @JsonProperty("rejection_reason")
     private String rejectionReason;

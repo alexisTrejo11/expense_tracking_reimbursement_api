@@ -3,18 +3,16 @@ package alexisTrejo.expenses.tracking.api.Models;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseCategory;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Table(name = "expenses")
 @Entity
 @NoArgsConstructor
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@Table(name = "expenses")
 public class Expense {
 
     @Id
@@ -60,12 +58,8 @@ public class Expense {
 
     private LocalDateTime deletedAt;
 
-    public void setUserRelationShipIds(Long userId, Long approvedBy) {
+    public void setUserId(Long userId) {
         this.user = new User(userId);
-
-        if (approvedBy != null) {
-            this.approvedBy = new User(approvedBy);
-        }
     }
 
     public void setAsDeleted() {
