@@ -20,7 +20,7 @@ public class Result<T> {
     private String errorMessage;
 
     @JsonProperty("status")
-    private HttpStatus status;
+    private HttpStatus status = HttpStatus.OK;
 
 
     @JsonCreator

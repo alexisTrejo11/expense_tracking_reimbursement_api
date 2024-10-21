@@ -1,5 +1,6 @@
 package alexisTrejo.expenses.tracking.api.DTOs.Expenses;
 
+import alexisTrejo.expenses.tracking.api.DTOs.User.ProfileDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseCategory;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
@@ -34,8 +35,8 @@ public class ExpenseDTO {
     @JsonProperty("status")
     private ExpenseStatus status;
 
-    @JsonProperty("approvedBy")
-    private UserDTO approvedBy;
+    @JsonProperty("approved_by_id")
+    private Long approvedById;
 
     @JsonProperty("rejection_reason")
     private String rejectionReason;

@@ -3,12 +3,13 @@ package alexisTrejo.expenses.tracking.api.Mappers;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseInsertDTO;
 import alexisTrejo.expenses.tracking.api.Models.Expense;
+import alexisTrejo.expenses.tracking.api.Models.User;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-20T22:44:09-0600",
+    date = "2024-10-21T13:32:03-0600",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.9.jar, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
@@ -22,6 +23,16 @@ public class ExpenseMapperImpl implements ExpenseMapper {
 
         Expense expense = new Expense();
 
+        expense.setAmount( expenseInsertDTO.getAmount() );
+        expense.setCategory( expenseInsertDTO.getCategory() );
+        expense.setDescription( expenseInsertDTO.getDescription() );
+        expense.setDate( expenseInsertDTO.getDate() );
+        expense.setReceiptUrl( expenseInsertDTO.getReceiptUrl() );
+        expense.setRejectionReason( expenseInsertDTO.getRejectionReason() );
+
+        expense.setCreatedAt( java.time.LocalDateTime.now() );
+        expense.setUpdatedAt( java.time.LocalDateTime.now() );
+
         return expense;
     }
 
@@ -33,6 +44,31 @@ public class ExpenseMapperImpl implements ExpenseMapper {
 
         ExpenseDTO expenseDTO = new ExpenseDTO();
 
+        expenseDTO.setApprovedById( expenseApprovedById( expense ) );
+        expenseDTO.setId( expense.getId() );
+        expenseDTO.setAmount( expense.getAmount() );
+        expenseDTO.setCategory( expense.getCategory() );
+        expenseDTO.setDescription( expense.getDescription() );
+        expenseDTO.setDate( expense.getDate() );
+        expenseDTO.setReceiptUrl( expense.getReceiptUrl() );
+        expenseDTO.setStatus( expense.getStatus() );
+        expenseDTO.setRejectionReason( expense.getRejectionReason() );
+
         return expenseDTO;
+    }
+
+    private Long expenseApprovedById(Expense expense) {
+        if ( expense == null ) {
+            return null;
+        }
+        User approvedBy = expense.getApprovedBy();
+        if ( approvedBy == null ) {
+            return null;
+        }
+        Long id = approvedBy.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
     }
 }

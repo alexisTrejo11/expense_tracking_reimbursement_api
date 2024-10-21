@@ -34,8 +34,8 @@ public class EmployeeExpenseController {
 
     @GetMapping("/by-user/{userId}")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(HttpServletRequest request,
-                                                                                @RequestParam(defaultValue = "0") int page,
-                                                                                @RequestParam(defaultValue = "10") int size) {
+                                                                           @RequestParam(defaultValue = "0") int page,
+                                                                           @RequestParam(defaultValue = "10") int size) {
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
         if (!userIdResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
@@ -48,7 +48,7 @@ public class EmployeeExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> RequestExpence(@Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
+    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> RequestExpense(@Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
                                                                             BindingResult bindingResult,
                                                                             HttpServletRequest request) {
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);

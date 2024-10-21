@@ -10,8 +10,12 @@ import org.mapstruct.Mapping;
 public interface ExpenseMapper {
 
 
+    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
     Expense insertDtoToEntity(ExpenseInsertDTO expenseInsertDTO);
 
+
+    @Mapping(target = "approvedById", source = "approvedBy.id")
     ExpenseDTO entityToDTO(Expense expense);
 
 }
