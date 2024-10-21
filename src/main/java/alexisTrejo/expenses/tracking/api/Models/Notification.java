@@ -33,6 +33,8 @@ public class Notification {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    // Getters, Setters, Constructors
+    public void setAsRead() {
+        this.read = true;
+    }
 }
 
