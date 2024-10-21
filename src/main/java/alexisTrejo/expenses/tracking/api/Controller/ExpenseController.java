@@ -1,35 +1,47 @@
 package alexisTrejo.expenses.tracking.api.Controller;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
+import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseRejectDTO;
+import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Service.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
+import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
+import alexisTrejo.expenses.tracking.api.Utils.Validations;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @RestController
-@RequestMapping("/v1/api/manager/expenses")
+@RequestMapping("/v1/api/expenses")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final JWTSecurity jwtSecurity;
 
     @Autowired
-    public ExpenseController(ExpenseService expenseService) {
+    public ExpenseController(ExpenseService expenseService, JWTSecurity jwtSecurity) {
         this.expenseService = expenseService;
+        this.jwtSecurity = jwtSecurity;
     }
 
     @GetMapping("/{expenseId}")
     public ResponseEntity<ResponseWrapper<ExpenseDTO>> getExpenseById(@PathVariable Long expenseId) {
-        Result<ExpenseDTO> expenseResult = expenseService.GetExpenseById(expenseId);
+        Result<ExpenseDTO> expenseResult = expenseService.getExpenseById(expenseId);
         if (!expenseResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(expenseResult.getErrorMessage()));
         }
@@ -42,7 +54,7 @@ public class ExpenseController {
                                                                                 @RequestParam(defaultValue = "0") int page,
                                                                                 @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ExpenseDTO> expenseDTOPage = expenseService.GetExpenseByUserId(userId, pageable);
+        Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserId(userId, pageable);
 
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched"));
     }
@@ -59,14 +71,74 @@ public class ExpenseController {
         ExpenseStatus expenseStatus = ExpenseStatus.findStatus(status).orElse(ExpenseStatus.PENDING);
 
         Pageable sortedPage = PageRequest.of(page, size, sort);
-        Page<ExpenseDTO> expenseDTOPage = expenseService.GetAllExpenseByStatus(expenseStatus, sortedPage);
+        Page<ExpenseDTO> expenseDTOPage = expenseService.getAllExpenseByStatus(expenseStatus, sortedPage);
 
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched. Sorted By: " + expenseStatus.toString() + " (" + direction +")"));
     }
 
+    // Summary
+    @GetMapping("/summary")
+    public ResponseWrapper<ExpenseSummary> getExpenseSummaryByDateRange(@RequestParam(required = false) LocalDateTime startDate,
+                                                                        @RequestParam(required = false) LocalDateTime endDate) {
+
+        // If both startDate or endDate are null, get the current month summary
+        if (startDate == null || endDate == null) {
+            LocalDate currentDate = LocalDate.now();
+            LocalDateTime startMonth = LocalDateTime.of(currentDate.getYear(), currentDate.getMonth(), 1, 0, 0);
+            LocalDateTime endMonth = LocalDateTime.of(currentDate.getYear(), currentDate.getMonth(), currentDate.lengthOfMonth(), 23, 59, 59);
+
+            // Fetch the monthly summary
+            ExpenseSummary monthlySummary = expenseService.getExpenseSummaryByDateRange(startMonth, endMonth);
+            return ResponseWrapper.ok(monthlySummary, "Monthly Expense Summary Successfully Fetched With Date Range: " + monthlySummary.getSummaryDateRange());
+        }
+
+        ExpenseSummary expenseSummary = expenseService.getExpenseSummaryByDateRange(startDate, endDate);
+
+        return ResponseWrapper.ok(expenseSummary, "Expense Summary Successfully Fetched With Date Range: " + expenseSummary.getSummaryDateRange());
+    }
+
+    // Manger Role Auth
+    @PutMapping("{expenseId}/approve")
+    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> approveExpense(HttpServletRequest request,
+                                                                            @PathVariable Long expenseId) {
+        Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
+        if (!userIdResult.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
+        }
+
+        Result<Void> updatedResult = expenseService.approveExpense(expenseId, userIdResult.getData());
+        if (!updatedResult.isSuccess()) {
+            return ResponseEntity.status(updatedResult.getStatus()).body(ResponseWrapper.error(updatedResult.getErrorMessage(), updatedResult.getStatus().value()));
+        }
+
+        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseId + " Succesfully Reject"));
+    }
+
+    @PutMapping("/{expenseId}/reject")
+    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> rejectExpenseStatus(HttpServletRequest request,
+                                                                                 @Valid ExpenseRejectDTO expenseRejectDTO,
+                                                                                 BindingResult bindingResult) {
+        Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
+        if (!userIdResult.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
+        }
+
+        Result<Void> validationResult = Validations.validateDTO(bindingResult);
+        if (!validationResult.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
+        }
+
+        Result<Void> updatedResult = expenseService.rejectExpense(expenseRejectDTO);
+        if (!updatedResult.isSuccess()) {
+            return ResponseEntity.status(updatedResult.getStatus()).body(ResponseWrapper.error(updatedResult.getErrorMessage(), updatedResult.getStatus().value()));
+        }
+
+        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseRejectDTO.getExpenseId() + " Succesfully Reject"));
+    }
+
     @DeleteMapping("/{expenseId}")
     public ResponseEntity<ResponseWrapper<ExpenseDTO>> softDeleteExpenseById(@PathVariable Long expenseId) {
-        Result<Void> deleteResult = expenseService.SoftDeleteExpenseById(expenseId);
+        Result<Void> deleteResult = expenseService.softDeleteExpenseById(expenseId);
         if (!deleteResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(deleteResult.getErrorMessage()));
         }

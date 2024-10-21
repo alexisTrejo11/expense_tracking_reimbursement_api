@@ -65,5 +65,14 @@ public class Expense {
     public void setAsDeleted() {
         this.deletedAt = LocalDateTime.now();
     }
+
+    public void setAsAppoved() {
+        this.status = ExpenseStatus.APPROVED;
+    }
+
+    public void setAsRejected(String rejectionReason) {
+        this.status = ExpenseStatus.REJECTED;
+        this.rejectionReason = rejectionReason;
+    }
 }
 

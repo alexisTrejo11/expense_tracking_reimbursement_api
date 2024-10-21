@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 @RequestMapping("/v1/api/employee-expenses")
 public class EmployeeExpenseController {
 
@@ -42,7 +43,7 @@ public class EmployeeExpenseController {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<ExpenseDTO> expenseDTOPage = expenseService.GetExpenseByUserId(userIdResult.getData(), pageable);
+        Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserId(userIdResult.getData(), pageable);
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched"));
     }
 
@@ -60,7 +61,7 @@ public class EmployeeExpenseController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
-        expenseService.CreateExpense(expenseInsertDTO, userIdResult.getData(), ExpenseStatus.PENDING);
+        expenseService.createExpense(expenseInsertDTO, userIdResult.getData(), ExpenseStatus.PENDING);
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense Successfully Requested"));
     }

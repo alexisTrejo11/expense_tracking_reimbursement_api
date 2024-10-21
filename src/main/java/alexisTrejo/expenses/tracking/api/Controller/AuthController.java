@@ -24,12 +24,13 @@ public class AuthController {
     private final AuthService authService;
 
     @Autowired
-    public AuthController(UserService userService, AuthService authService) {
+    public AuthController(UserService userService,
+                          AuthService authService) {
         this.userService = userService;
         this.authService = authService;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register-employee")
     public ResponseEntity<ResponseWrapper<String>> registerEmployee(@Valid @RequestBody UserInsertDTO userInsertDTO,
                                                                     BindingResult bindingResult) {
         Result<Void> validationResult = Validations.validateDTO(bindingResult);
@@ -46,8 +47,47 @@ public class AuthController {
 
         String JWT = authService.ProcessRegister(userDTO);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(JWT,"User Successfully Registered"));
+        return ResponseEntity.ok(ResponseWrapper.ok(JWT,"User With Role:" + Role.EMPLOYEE.name()  +  " Successfully Registered"));
     }
+
+    @PostMapping("/register-manager")
+    public ResponseEntity<ResponseWrapper<String>> registerManager(@Valid @RequestBody UserInsertDTO userInsertDTO,
+                                                                    BindingResult bindingResult) {
+        Result<Void> validationResult = Validations.validateDTO(bindingResult);
+        if (!validationResult.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
+        }
+
+        Result<Void> credentialsResult = authService.validateRegisterCredentials(userInsertDTO);
+        if (!credentialsResult.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(credentialsResult.getErrorMessage()));
+        }
+
+        UserDTO userDTO = userService.createUser(userInsertDTO, Role.MANAGER);
+
+        String JWT = authService.ProcessRegister(userDTO);
+        return ResponseEntity.ok(ResponseWrapper.ok(JWT,"User With Role:" + Role.MANAGER.name()  +  " Successfully Registered"));
+    }
+
+    @PostMapping("/register-admin")
+    public ResponseEntity<ResponseWrapper<String>> registerAdmin(@Valid @RequestBody UserInsertDTO userInsertDTO,
+                                                                   BindingResult bindingResult) {
+        Result<Void> validationResult = Validations.validateDTO(bindingResult);
+        if (!validationResult.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
+        }
+
+        Result<Void> credentialsResult = authService.validateRegisterCredentials(userInsertDTO);
+        if (!credentialsResult.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(credentialsResult.getErrorMessage()));
+        }
+
+        UserDTO userDTO = userService.createUser(userInsertDTO, Role.ADMIN);
+
+        String JWT = authService.ProcessRegister(userDTO);
+        return ResponseEntity.ok(ResponseWrapper.ok(JWT,"User With Role:" + Role.ADMIN.name()  +  " Successfully Registered"));
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<ResponseWrapper<String>> login(@Valid @RequestBody LoginDTO loginDTO, BindingResult bindingResult) {

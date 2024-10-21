@@ -12,10 +12,15 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     #hibernate:
     # ddl-auto: update
+    show-sql: true
+    properties:
+        hibernate:
+          format_sql: true  # Corrected formatting
+
 
 server:
   port: 8080
 
 jwt:
   secret:
-    key: ${JWT_SECRET_KEY}
+    key: U29tZSByYW5kb20gdGV4dCBzdHJpbmcgdG8gYmUgdXNlZCBpbiBhbGxpZ29yYXRoIG5hbWVzIGFuZCBjb250ZXh0IGluIGJhc2U2NCBjb2RlIGluIHJlYWQgYXQgdGhlIGV4dHJhIGVuY29kaW5nLg==

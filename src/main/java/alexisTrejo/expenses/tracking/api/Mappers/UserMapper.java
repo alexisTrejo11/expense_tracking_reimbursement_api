@@ -11,19 +11,13 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "lastLogin", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "expenses", ignore = true)
-    @Mapping(target = "notifications", ignore = true)
+
     User insertDtoToEntity(UserInsertDTO userInsertDTO);
 
     UserDTO entityToDTO(User user);
     ProfileDTO entityToProfileDTO(User user);
 
 
-    @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "expenses", ignore = true)
-    @Mapping(target = "notifications", ignore = true)
+
     void updateUser(@MappingTarget User user, UserInsertDTO userInsertDTO);
 }
