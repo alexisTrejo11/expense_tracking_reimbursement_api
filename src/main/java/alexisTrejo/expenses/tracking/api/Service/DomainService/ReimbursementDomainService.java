@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Service;
+package alexisTrejo.expenses.tracking.api.Service.DomainService;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Reimbursement.ReimbursementInsertDTO;
 import alexisTrejo.expenses.tracking.api.Models.Expense;

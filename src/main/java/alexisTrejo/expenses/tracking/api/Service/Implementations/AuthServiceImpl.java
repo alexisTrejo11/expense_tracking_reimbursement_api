@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Service;
+package alexisTrejo.expenses.tracking.api.Service.Implementations;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Auth.LoginDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
@@ -8,6 +8,7 @@ import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
 import alexisTrejo.expenses.tracking.api.Middleware.PasswordHandler;
 import alexisTrejo.expenses.tracking.api.Models.User;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.AuthService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

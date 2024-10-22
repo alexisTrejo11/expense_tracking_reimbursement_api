@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Service;
+package alexisTrejo.expenses.tracking.api.Service.Implementations;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseInsertDTO;
@@ -8,6 +8,8 @@ import alexisTrejo.expenses.tracking.api.Models.Expense;
 import alexisTrejo.expenses.tracking.api.Models.User;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Repository.ExpenseRepository;
+import alexisTrejo.expenses.tracking.api.Service.DomainService.ExpenseDomainService;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,17 +69,19 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
-    public void createExpense(ExpenseInsertDTO expenseInsertDTO, Long userId, ExpenseStatus expenseStatus) {
+    public ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, Long userId, ExpenseStatus expenseStatus) {
         Expense expense = expenseMapper.insertDtoToEntity(expenseInsertDTO);
         expense.setStatus(expenseStatus);
         expense.setUserId(userId);
 
         expenseRepository.saveAndFlush(expense);
+        return expenseMapper.entityToDTO(expense);
+
     }
 
     @Override
     @Transactional
-    public Result<Void> approveExpense(Long expenseId, Long managerId) {
+    public Result<ExpenseDTO> approveExpense(Long expenseId, Long managerId) {
        Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
        if (optionalExpense.isEmpty()) {
            return Result.error("Expense with ID " + expenseId + " not found", HttpStatus.NOT_FOUND);
@@ -93,12 +97,12 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setStatus(ExpenseStatus.APPROVED);
         expenseRepository.save(expense);
 
-        return Result.success();
+        return Result.success(expenseMapper.entityToDTO(expense));
     }
 
     @Override
     @Transactional
-    public Result<Void> rejectExpense(ExpenseRejectDTO expenseRejectDTO) {
+    public Result<ExpenseDTO> rejectExpense(ExpenseRejectDTO expenseRejectDTO) {
         Optional<Expense> optionalExpense = expenseRepository.findById(expenseRejectDTO.getExpenseId());
         if (optionalExpense.isEmpty()) {
             return Result.error("Expense with ID " + expenseRejectDTO.getExpenseId() + " not found", HttpStatus.NOT_FOUND);
@@ -113,7 +117,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setAsRejected(expenseRejectDTO.getRejectReason());
         expenseRepository.save(expense);
 
-        return Result.success();
+        return Result.success(expenseMapper.entityToDTO(expense));
     }
 
     @Override

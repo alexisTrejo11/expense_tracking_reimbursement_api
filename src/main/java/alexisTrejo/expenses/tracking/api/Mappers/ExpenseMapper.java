@@ -16,6 +16,7 @@ public interface ExpenseMapper {
 
 
     @Mapping(target = "approvedById", source = "approvedBy.id")
+    @Mapping(target = "userId", source = "expense.user.id")
     ExpenseDTO entityToDTO(Expense expense);
 
 }

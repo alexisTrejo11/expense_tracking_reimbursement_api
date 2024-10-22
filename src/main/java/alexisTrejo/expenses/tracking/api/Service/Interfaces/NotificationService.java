@@ -1,5 +1,6 @@
-package alexisTrejo.expenses.tracking.api.Service;
+package alexisTrejo.expenses.tracking.api.Service.Interfaces;
 
+import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Notification.NotificationDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Notification.NotificationInsertDTO;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
@@ -12,5 +13,7 @@ public interface NotificationService {
     Result<NotificationDTO> getNotificationById(Long notificationId);
 
     void createNotification(NotificationInsertDTO notificationInsertDTO);
+    void sendNotificationFromExpense(ExpenseDTO expenseDTO);
+
     Result<Void> markNotificationAsRead(Long notificationId);
 }

@@ -4,7 +4,8 @@ import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseInsertDTO;
 import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
-import alexisTrejo.expenses.tracking.api.Service.ExpenseService;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Validations;
@@ -25,11 +26,15 @@ public class EmployeeExpenseController {
 
     private final ExpenseService expenseService;
     private final JWTSecurity jwtSecurity;
+    private final NotificationService notificationService;
 
     @Autowired
-    public EmployeeExpenseController(ExpenseService expenseService, JWTSecurity jwtSecurity) {
+    public EmployeeExpenseController(ExpenseService expenseService,
+                                     JWTSecurity jwtSecurity,
+                                     NotificationService notificationService) {
         this.expenseService = expenseService;
         this.jwtSecurity = jwtSecurity;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/by-user/{userId}")
@@ -61,7 +66,9 @@ public class EmployeeExpenseController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
-        expenseService.createExpense(expenseInsertDTO, userIdResult.getData(), ExpenseStatus.PENDING);
+        ExpenseDTO expenseDTO = expenseService.createExpense(expenseInsertDTO, userIdResult.getData(), ExpenseStatus.PENDING);
+
+        notificationService.sendNotificationFromExpense(expenseDTO);
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense Successfully Requested"));
     }

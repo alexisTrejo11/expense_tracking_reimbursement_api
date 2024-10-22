@@ -17,6 +17,9 @@ public class ExpenseDTO {
     @JsonProperty("id")
     private Long id;
 
+    @JsonProperty("user_id")
+    private Long userId;
+
     @JsonProperty("amount")
     private Double amount;
 

@@ -3,7 +3,8 @@ package alexisTrejo.expenses.tracking.api.Controller;
 import alexisTrejo.expenses.tracking.api.DTOs.Reimbursement.ReimbursementDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Reimbursement.ReimbursementInsertDTO;
 import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
-import alexisTrejo.expenses.tracking.api.Service.ReimbursementService;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.ReimbursementService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Validations;
@@ -23,12 +24,15 @@ import org.springframework.web.bind.annotation.*;
 public class ReimbursementController {
 
     private final ReimbursementService reimbursementService;
+    private final NotificationService notificationService;
     private final JWTSecurity jwtSecurity;
 
     @Autowired
     public ReimbursementController(ReimbursementService reimbursementService,
+                                   NotificationService notificationService,
                                    JWTSecurity jwtSecurity) {
         this.reimbursementService = reimbursementService;
+        this.notificationService = notificationService;
         this.jwtSecurity = jwtSecurity;
     }
 
@@ -70,10 +74,13 @@ public class ReimbursementController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
-        Result<Void> createResult = reimbursementService.createReimbursement(reimbursementInsertDTO, userIdResult.getData());
+        Result<ReimbursementDTO> createResult = reimbursementService.createReimbursement(reimbursementInsertDTO, userIdResult.getData());
         if (!createResult.isSuccess()){
             return ResponseEntity.status(createResult.getStatus()).body(ResponseWrapper.badRequest(createResult.getErrorMessage()));
         }
+
+        // Create Notification in another thread async
+        notificationService.sendNotificationFromExpense(createResult.getData().getExpense());
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Reimbursement successfully created"));
     }

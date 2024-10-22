@@ -2,6 +2,8 @@ package alexisTrejo.expenses.tracking.api.Models;
 
 import alexisTrejo.expenses.tracking.api.Models.enums.NotificationType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Notification {
 
@@ -36,5 +40,7 @@ public class Notification {
     public void setAsRead() {
         this.read = true;
     }
+
+
 }
 

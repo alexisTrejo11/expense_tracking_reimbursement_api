@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Service;
+package alexisTrejo.expenses.tracking.api.Service.Interfaces;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Auth.LoginDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;

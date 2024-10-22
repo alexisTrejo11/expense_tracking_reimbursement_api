@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-21T14:56:54-0600",
+    date = "2024-10-22T15:15:01-0600",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.9.jar, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
@@ -21,14 +21,14 @@ public class NotificationMapperImpl implements NotificationMapper {
             return null;
         }
 
-        Notification notification = new Notification();
+        Notification.NotificationBuilder notification = Notification.builder();
 
-        notification.setMessage( expenseInsertDTO.getMessage() );
-        notification.setType( expenseInsertDTO.getType() );
+        notification.message( expenseInsertDTO.getMessage() );
+        notification.type( expenseInsertDTO.getType() );
 
-        notification.setCreatedAt( java.time.LocalDateTime.now() );
+        notification.createdAt( java.time.LocalDateTime.now() );
 
-        return notification;
+        return notification.build();
     }
 
     @Override

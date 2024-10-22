@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Service;
+package alexisTrejo.expenses.tracking.api.Service.Interfaces;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Reimbursement.ReimbursementDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Reimbursement.ReimbursementInsertDTO;
@@ -9,6 +9,6 @@ import org.springframework.data.domain.Pageable;
 public interface ReimbursementService {
     Result<ReimbursementDTO> getReimbursementById(Long reimbursementId);
     Result<Page<ReimbursementDTO>> getReimbursementByUserId(Long userId, Pageable pageable);
-    Result<Void> createReimbursement(ReimbursementInsertDTO reimbursementInsertDTO, Long userId);
+    Result<ReimbursementDTO> createReimbursement(ReimbursementInsertDTO reimbursementInsertDTO, Long userId);
 
 }

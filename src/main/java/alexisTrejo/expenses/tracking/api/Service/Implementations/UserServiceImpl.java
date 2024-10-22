@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Service;
+package alexisTrejo.expenses.tracking.api.Service.Implementations;
 
 import alexisTrejo.expenses.tracking.api.DTOs.User.ProfileDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
@@ -8,6 +8,7 @@ import alexisTrejo.expenses.tracking.api.Middleware.PasswordHandler;
 import alexisTrejo.expenses.tracking.api.Models.User;
 import alexisTrejo.expenses.tracking.api.Models.enums.Role;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.UserService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements  UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;

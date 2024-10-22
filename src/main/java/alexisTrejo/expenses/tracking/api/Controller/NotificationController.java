@@ -2,7 +2,7 @@ package alexisTrejo.expenses.tracking.api.Controller;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Notification.NotificationDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Notification.NotificationInsertDTO;
-import alexisTrejo.expenses.tracking.api.Service.NotificationService;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Validations;

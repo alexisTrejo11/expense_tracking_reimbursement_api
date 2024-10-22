@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Service;
+package alexisTrejo.expenses.tracking.api.Service.Implementations;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Reimbursement.ReimbursementDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Reimbursement.ReimbursementInsertDTO;
@@ -6,6 +6,8 @@ import alexisTrejo.expenses.tracking.api.Mappers.ReimbursementMapper;
 import alexisTrejo.expenses.tracking.api.Models.Reimbursement;
 import alexisTrejo.expenses.tracking.api.Repository.ReimbursementRepository;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
+import alexisTrejo.expenses.tracking.api.Service.DomainService.ReimbursementDomainService;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.ReimbursementService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,7 +55,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
     }
 
     @Override
-    public Result<Void> createReimbursement(ReimbursementInsertDTO reimbursementInsertDTO, Long userId) {
+    public Result<ReimbursementDTO> createReimbursement(ReimbursementInsertDTO reimbursementInsertDTO, Long userId) {
         Reimbursement reimbursement = reimbursementMapper.insertDtoToEntity(reimbursementInsertDTO);
 
         Result<Void> relationShipsResult = reimbursementDomainService.setReimbursementRelationShips(reimbursementInsertDTO, reimbursement, userId);
@@ -63,7 +65,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
         reimbursementRepository.save(reimbursement);
 
-        return Result.success();
+        return Result.success(reimbursementMapper.entityToDTO(reimbursement));
     }
 
 }

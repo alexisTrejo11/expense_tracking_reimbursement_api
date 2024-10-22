@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-21T14:55:54-0600",
+    date = "2024-10-22T15:22:38-0600",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.9.jar, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
@@ -45,6 +45,7 @@ public class ExpenseMapperImpl implements ExpenseMapper {
         ExpenseDTO expenseDTO = new ExpenseDTO();
 
         expenseDTO.setApprovedById( expenseApprovedById( expense ) );
+        expenseDTO.setUserId( expenseUserId( expense ) );
         expenseDTO.setId( expense.getId() );
         expenseDTO.setAmount( expense.getAmount() );
         expenseDTO.setCategory( expense.getCategory() );
@@ -66,6 +67,21 @@ public class ExpenseMapperImpl implements ExpenseMapper {
             return null;
         }
         Long id = approvedBy.getId();
+        if ( id == null ) {
+            return null;
+        }
+        return id;
+    }
+
+    private Long expenseUserId(Expense expense) {
+        if ( expense == null ) {
+            return null;
+        }
+        User user = expense.getUser();
+        if ( user == null ) {
+            return null;
+        }
+        Long id = user.getId();
         if ( id == null ) {
             return null;
         }

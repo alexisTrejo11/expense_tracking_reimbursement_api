@@ -4,7 +4,8 @@ import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseRejectDTO;
 import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
-import alexisTrejo.expenses.tracking.api.Service.ExpenseService;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
+import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/api/expenses")
@@ -32,11 +31,15 @@ public class ExpenseController {
 
     private final ExpenseService expenseService;
     private final JWTSecurity jwtSecurity;
+    private final NotificationService notificationService;
 
     @Autowired
-    public ExpenseController(ExpenseService expenseService, JWTSecurity jwtSecurity) {
+    public ExpenseController(ExpenseService expenseService,
+                             JWTSecurity jwtSecurity,
+                             NotificationService notificationService) {
         this.expenseService = expenseService;
         this.jwtSecurity = jwtSecurity;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/{expenseId}")
@@ -106,12 +109,15 @@ public class ExpenseController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
         }
 
-        Result<Void> updatedResult = expenseService.approveExpense(expenseId, userIdResult.getData());
+        Result<ExpenseDTO> updatedResult = expenseService.approveExpense(expenseId, userIdResult.getData());
         if (!updatedResult.isSuccess()) {
             return ResponseEntity.status(updatedResult.getStatus()).body(ResponseWrapper.error(updatedResult.getErrorMessage(), updatedResult.getStatus().value()));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseId + " Succesfully Reject"));
+        // Run in another thread and create and send the notification
+        notificationService.sendNotificationFromExpense(updatedResult.getData());
+
+        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseId + " Successfully Approve"));
     }
 
     @PutMapping("/{expenseId}/reject")
@@ -128,12 +134,15 @@ public class ExpenseController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
-        Result<Void> updatedResult = expenseService.rejectExpense(expenseRejectDTO);
+        Result<ExpenseDTO> updatedResult = expenseService.rejectExpense(expenseRejectDTO);
         if (!updatedResult.isSuccess()) {
             return ResponseEntity.status(updatedResult.getStatus()).body(ResponseWrapper.error(updatedResult.getErrorMessage(), updatedResult.getStatus().value()));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseRejectDTO.getExpenseId() + " Succesfully Reject"));
+        // Run in another thread and create and send the notification
+        notificationService.sendNotificationFromExpense(updatedResult.getData());
+
+        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseRejectDTO.getExpenseId() + " Successfully Reject"));
     }
 
     @DeleteMapping("/{expenseId}")

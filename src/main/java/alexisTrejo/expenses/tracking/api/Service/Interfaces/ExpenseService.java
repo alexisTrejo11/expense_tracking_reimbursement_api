@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Service;
+package alexisTrejo.expenses.tracking.api.Service.Interfaces;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseInsertDTO;
@@ -18,9 +18,9 @@ public interface ExpenseService {
 
     ExpenseSummary getExpenseSummaryByDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
-    void createExpense(ExpenseInsertDTO expenseInsertDTO, Long userId, ExpenseStatus expenseStatus);
-    Result<Void> approveExpense(Long expenseId, Long managerId);
-    Result<Void> rejectExpense(ExpenseRejectDTO expenseRejectDTO);
+    ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, Long userId, ExpenseStatus expenseStatus);
+    Result<ExpenseDTO> approveExpense(Long expenseId, Long managerId);
+    Result<ExpenseDTO> rejectExpense(ExpenseRejectDTO expenseRejectDTO);
 
     Result<Void> softDeleteExpenseById(Long expenseId);
 
