@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +47,7 @@ public class ReimbursementController {
             @ApiResponse(responseCode = "404", description = "No reimbursements found for the user.")
     })
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAnyRole('MANAGER', 'FINANCIAL')")
     public ResponseEntity<ResponseWrapper<Page<ReimbursementDTO>>> getReimbursementByUserId(@PathVariable Long userId,
                                                                                             @RequestParam(defaultValue = "0") int page,
                                                                                             @RequestParam(defaultValue = "10") int size) {
@@ -65,6 +67,7 @@ public class ReimbursementController {
             @ApiResponse(responseCode = "404", description = "Reimbursement not found.")
     })
     @GetMapping("/{reimbursementId}")
+    @PreAuthorize("hasAnyRole('MANAGER', 'FINANCIAL')")
     public ResponseEntity<ResponseWrapper<ReimbursementDTO>> getReimbursementById(@PathVariable Long reimbursementId) {
         Result<ReimbursementDTO> reimbursementResult = reimbursementService.getReimbursementById(reimbursementId);
         if (!reimbursementResult.isSuccess()) {
@@ -81,6 +84,7 @@ public class ReimbursementController {
             @ApiResponse(responseCode = "401", description = "Unauthorized user.")
     })
     @PostMapping
+    @PreAuthorize("hasAnyRole('MANAGER', 'FINANCIAL')")
     public ResponseEntity<ResponseWrapper<Void>> createReimbursement(@Valid @RequestBody ReimbursementInsertDTO reimbursementInsertDTO,
                                                                      BindingResult bindingResult,
                                                                      HttpServletRequest request) {

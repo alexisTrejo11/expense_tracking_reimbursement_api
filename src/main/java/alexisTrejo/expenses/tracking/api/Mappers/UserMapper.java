@@ -13,6 +13,7 @@ public interface UserMapper {
 
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "lastLogin", expression = "java(java.time.LocalDateTime.now())")
     User insertDtoToEntity(UserInsertDTO userInsertDTO);
 
     UserDTO entityToDTO(User user);

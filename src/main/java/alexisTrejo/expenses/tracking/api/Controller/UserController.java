@@ -8,6 +8,7 @@ import alexisTrejo.expenses.tracking.api.Utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User profile not found.")
     })
     @GetMapping("/my-profile")
+    @PreAuthorize("hasAnyRole('EMPLOYEE','MANAGER', 'FINANCIAL', 'ADMIN')")
     public ResponseEntity<ResponseWrapper<ProfileDTO>> getMyProfile(HttpServletRequest request) {
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
         if (!userIdResult.isSuccess()) {

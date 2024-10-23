@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-23T12:58:49-0600",
+    date = "2024-10-23T13:37:43-0600",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.9.jar, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
@@ -31,6 +31,7 @@ public class UserMapperImpl implements UserMapper {
 
         user.setCreatedAt( java.time.LocalDateTime.now() );
         user.setUpdatedAt( java.time.LocalDateTime.now() );
+        user.setLastLogin( java.time.LocalDateTime.now() );
 
         return user;
     }

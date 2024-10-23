@@ -10,6 +10,7 @@ import alexisTrejo.expenses.tracking.api.Utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
-@RequestMapping("/v1/api/expenses")
+@RequestMapping("/v1/api/employees/expenses")
 public class ExpenseAttachmentController {
     private final ExpenseService expenseService;
     private final AttachmentService attachmentService;
@@ -45,6 +46,7 @@ public class ExpenseAttachmentController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @PostMapping("/{expenseId}/attachments")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<ResponseWrapper<Void>> addAttachment(
             @Parameter(description = "ID of the expense") @PathVariable Long expenseId,
             @Parameter(description = "File to be uploaded") @RequestParam(value = "file") MultipartFile file) throws IOException {
@@ -73,6 +75,7 @@ public class ExpenseAttachmentController {
             @ApiResponse(responseCode = "404", description = "Expense not found")
     })
     @GetMapping("/{expenseId}/attachments")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<ResponseWrapper<List<AttachmentDTO>>> getAttachmentsByExpenseId(
             @Parameter(description = "ID of the expense") @PathVariable Long expenseId) {
 

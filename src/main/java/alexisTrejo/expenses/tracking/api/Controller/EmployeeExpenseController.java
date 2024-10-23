@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
-@RequestMapping("/v1/api/employee-expenses")
+@RequestMapping("/v1/api/employees/expenses")
 public class EmployeeExpenseController {
 
     private final ExpenseService expenseService;
@@ -50,6 +51,7 @@ public class EmployeeExpenseController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @GetMapping("/by-user/{userId}")
+    @PreAuthorize("hasRole('Employee')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @RequestParam(defaultValue = "0") int page,
@@ -75,6 +77,7 @@ public class EmployeeExpenseController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseWrapper<Void>> RequestExpense(
             @Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
             BindingResult bindingResult,

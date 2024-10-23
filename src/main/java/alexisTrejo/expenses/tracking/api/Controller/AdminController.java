@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ public class AdminController {
 
 
     @GetMapping("/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AdminDashboardDTO> getAdminDashboard() {
         AdminDashboardDTO adminDashboard = adminService.getAdminDashboard();
 
@@ -42,6 +44,7 @@ public class AdminController {
 
 
     @PutMapping("/settings")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseWrapper<String>> updateSettings(@Valid @RequestBody SettingsDTO settingsDTO,
                                                                   BindingResult bindingResult) {
         Result<Void> validationResult = Validations.validateDTO(bindingResult);
@@ -55,6 +58,7 @@ public class AdminController {
     }
 
     @GetMapping("/settings")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseWrapper<SettingsDTO> getCurrentSettings() {
         SettingsDTO settingsDTO = adminService.getCurrentSettings();
         return ResponseWrapper.ok(settingsDTO, "Current Settings Successfully Fetched");

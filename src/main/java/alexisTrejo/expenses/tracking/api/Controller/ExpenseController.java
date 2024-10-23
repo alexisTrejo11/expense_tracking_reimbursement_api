@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/v1/api/expenses")
+@RequestMapping("/v1/api/manager/expenses")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
@@ -51,6 +52,7 @@ public class ExpenseController {
             @ApiResponse(responseCode = "404", description = "Expense not found.")
     })
     @GetMapping("/{expenseId}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<ExpenseDTO>> getExpenseById(@PathVariable Long expenseId) {
         Result<ExpenseDTO> expenseResult = expenseService.getExpenseById(expenseId);
         if (!expenseResult.isSuccess()) {
@@ -65,6 +67,7 @@ public class ExpenseController {
             @ApiResponse(responseCode = "200", description = "Expense data successfully fetched."),
     })
     @GetMapping("/by-user/{userId}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getExpenseByUserId(@PathVariable Long userId,
                                                                                 @RequestParam(defaultValue = "0") int page,
                                                                                 @RequestParam(defaultValue = "10") int size) {
@@ -79,6 +82,7 @@ public class ExpenseController {
             @ApiResponse(responseCode = "200", description = "Expense data successfully fetched."),
     })
     @GetMapping("/by-status")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getExpensesByStatus(@RequestParam String status,
                                                                                  @RequestParam(defaultValue = "0") int page,
                                                                                  @RequestParam(defaultValue = "10") int size,
@@ -100,6 +104,7 @@ public class ExpenseController {
             @ApiResponse(responseCode = "200", description = "Expense summary successfully fetched."),
     })
     @GetMapping("/summary")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseWrapper<ExpenseSummary> getExpenseSummaryByDateRange(@RequestParam(required = false) LocalDateTime startDate,
                                                                         @RequestParam(required = false) LocalDateTime endDate) {
 
@@ -126,6 +131,7 @@ public class ExpenseController {
             @ApiResponse(responseCode = "404", description = "Expense not found.")
     })
     @PutMapping("{expenseId}/approve")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> approveExpense(HttpServletRequest request,
                                                                             @PathVariable Long expenseId) {
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
@@ -152,6 +158,7 @@ public class ExpenseController {
             @ApiResponse(responseCode = "404", description = "Expense not found.")
     })
     @PutMapping("/{expenseId}/reject")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> rejectExpenseStatus(HttpServletRequest request,
                                                                                  @Valid ExpenseRejectDTO expenseRejectDTO,
                                                                                  BindingResult bindingResult) {
@@ -182,6 +189,7 @@ public class ExpenseController {
             @ApiResponse(responseCode = "404", description = "Expense not found.")
     })
     @DeleteMapping("/{expenseId}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Void>> deleteExpense(@PathVariable Long expenseId) {
         Result<Void> result = expenseService.softDeleteExpenseById(expenseId);
         if (!result.isSuccess()) {
