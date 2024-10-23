@@ -20,6 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/v1/api/employee-expenses")
 public class EmployeeExpenseController {
@@ -37,37 +42,57 @@ public class EmployeeExpenseController {
         this.notificationService = notificationService;
     }
 
+    @Operation(summary = "Get expenses by user ID",
+            description = "Fetches a paginated list of expenses for the authenticated user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched expenses"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(HttpServletRequest request,
-                                                                           @RequestParam(defaultValue = "0") int page,
-                                                                           @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(
+            @Parameter(description = "ID of the user") @PathVariable Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            HttpServletRequest request) {
+
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
         if (!userIdResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
         }
 
         Pageable pageable = PageRequest.of(page, size);
-
         Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserId(userIdResult.getData(), pageable);
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched"));
     }
 
+    @Operation(summary = "Request a new expense",
+            description = "Creates a new expense based on the provided data.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense successfully requested"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     @PostMapping
-    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> RequestExpense(@Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
-                                                                            BindingResult bindingResult,
-                                                                            HttpServletRequest request) {
+    public ResponseEntity<ResponseWrapper<Void>> RequestExpense(
+            @Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
+            BindingResult bindingResult,
+            HttpServletRequest request) {
+
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
         if (!userIdResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
         }
 
         Result<Void> validationResult = Validations.validateDTO(bindingResult);
         if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
         ExpenseDTO expenseDTO = expenseService.createExpense(expenseInsertDTO, userIdResult.getData(), ExpenseStatus.PENDING);
-
         notificationService.sendNotificationFromExpense(expenseDTO);
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense Successfully Requested"));

@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/v1/api/users")
 public class UserController {
@@ -24,6 +28,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Get My Profile", description = "Retrieve the profile information of the authenticated user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User profile successfully fetched."),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user."),
+            @ApiResponse(responseCode = "404", description = "User profile not found.")
+    })
     @GetMapping("/my-profile")
     public ResponseEntity<ResponseWrapper<ProfileDTO>> getMyProfile(HttpServletRequest request) {
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
@@ -36,6 +46,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.error(userResult.getErrorMessage(), HttpStatus.NOT_FOUND.value()));
         }
 
-        return  ResponseEntity.ok(ResponseWrapper.ok(userResult.getData(), "User Profile Successfully Fetched"));
+        return ResponseEntity.ok(ResponseWrapper.ok(userResult.getData(), "User Profile Successfully Fetched"));
     }
 }

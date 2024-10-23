@@ -21,6 +21,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,6 +45,11 @@ public class ExpenseController {
         this.notificationService = notificationService;
     }
 
+    @Operation(summary = "Get Expense by ID", description = "Fetch an expense by its unique ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense data successfully fetched."),
+            @ApiResponse(responseCode = "404", description = "Expense not found.")
+    })
     @GetMapping("/{expenseId}")
     public ResponseEntity<ResponseWrapper<ExpenseDTO>> getExpenseById(@PathVariable Long expenseId) {
         Result<ExpenseDTO> expenseResult = expenseService.getExpenseById(expenseId);
@@ -52,6 +60,10 @@ public class ExpenseController {
         return ResponseEntity.ok(ResponseWrapper.ok(expenseResult.getData(), "Expense Data Successfully Fetched"));
     }
 
+    @Operation(summary = "Get Expenses by User ID", description = "Fetch expenses associated with a user by user ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense data successfully fetched."),
+    })
     @GetMapping("/by-user/{userId}")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getExpenseByUserId(@PathVariable Long userId,
                                                                                 @RequestParam(defaultValue = "0") int page,
@@ -62,11 +74,15 @@ public class ExpenseController {
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched"));
     }
 
+    @Operation(summary = "Get Expenses by Status", description = "Fetch expenses based on their status.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense data successfully fetched."),
+    })
     @GetMapping("/by-status")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getExpensesByStatus(@RequestParam String status,
-                                                                                @RequestParam(defaultValue = "0") int page,
-                                                                                @RequestParam(defaultValue = "10") int size,
-                                                                                @RequestParam(defaultValue = "true") Boolean isSortedASC) {
+                                                                                 @RequestParam(defaultValue = "0") int page,
+                                                                                 @RequestParam(defaultValue = "10") int size,
+                                                                                 @RequestParam(defaultValue = "true") Boolean isSortedASC) {
         Sort.Direction direction = !isSortedASC ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, "createdAt");
 
@@ -79,7 +95,10 @@ public class ExpenseController {
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched. Sorted By: " + expenseStatus.toString() + " (" + direction +")"));
     }
 
-    // Summary
+    @Operation(summary = "Get Expense Summary by Date Range", description = "Fetch the summary of expenses within a specified date range.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense summary successfully fetched."),
+    })
     @GetMapping("/summary")
     public ResponseWrapper<ExpenseSummary> getExpenseSummaryByDateRange(@RequestParam(required = false) LocalDateTime startDate,
                                                                         @RequestParam(required = false) LocalDateTime endDate) {
@@ -100,7 +119,12 @@ public class ExpenseController {
         return ResponseWrapper.ok(expenseSummary, "Expense Summary Successfully Fetched With Date Range: " + expenseSummary.getSummaryDateRange());
     }
 
-    // Manger Role Auth
+    @Operation(summary = "Approve Expense", description = "Approve a specific expense by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense successfully approved."),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access."),
+            @ApiResponse(responseCode = "404", description = "Expense not found.")
+    })
     @PutMapping("{expenseId}/approve")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> approveExpense(HttpServletRequest request,
                                                                             @PathVariable Long expenseId) {
@@ -117,9 +141,16 @@ public class ExpenseController {
         // Run in another thread and create and send the notification
         notificationService.sendNotificationFromExpense(updatedResult.getData());
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseId + " Successfully Approve"));
+        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseId + " Successfully Approved"));
     }
 
+    @Operation(summary = "Reject Expense", description = "Reject a specific expense with a reason.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense successfully rejected."),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access."),
+            @ApiResponse(responseCode = "400", description = "Bad request due to validation errors."),
+            @ApiResponse(responseCode = "404", description = "Expense not found.")
+    })
     @PutMapping("/{expenseId}/reject")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> rejectExpenseStatus(HttpServletRequest request,
                                                                                  @Valid ExpenseRejectDTO expenseRejectDTO,
@@ -142,16 +173,21 @@ public class ExpenseController {
         // Run in another thread and create and send the notification
         notificationService.sendNotificationFromExpense(updatedResult.getData());
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseRejectDTO.getExpenseId() + " Successfully Reject"));
+        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseRejectDTO.getExpenseId() + " Successfully Rejected"));
     }
 
+    @Operation(summary = "Soft Delete Expense by ID", description = "Soft delete an expense by its unique ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense successfully deleted."),
+            @ApiResponse(responseCode = "404", description = "Expense not found.")
+    })
     @DeleteMapping("/{expenseId}")
-    public ResponseEntity<ResponseWrapper<ExpenseDTO>> softDeleteExpenseById(@PathVariable Long expenseId) {
-        Result<Void> deleteResult = expenseService.softDeleteExpenseById(expenseId);
-        if (!deleteResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(deleteResult.getErrorMessage()));
+    public ResponseEntity<ResponseWrapper<Void>> deleteExpense(@PathVariable Long expenseId) {
+        Result<Void> result = expenseService.softDeleteExpenseById(expenseId);
+        if (!result.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(result.getErrorMessage()));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense Data Successfully Deleted"));
+        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense Successfully Deleted"));
     }
 }

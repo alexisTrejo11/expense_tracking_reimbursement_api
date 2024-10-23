@@ -19,6 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/v1/api/reimbursements")
 public class ReimbursementController {
@@ -36,6 +40,11 @@ public class ReimbursementController {
         this.jwtSecurity = jwtSecurity;
     }
 
+    @Operation(summary = "Get Reimbursements by User ID", description = "Retrieve all reimbursements for a specific user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reimbursements successfully fetched."),
+            @ApiResponse(responseCode = "404", description = "No reimbursements found for the user.")
+    })
     @GetMapping("/user/{userId}")
     public ResponseEntity<ResponseWrapper<Page<ReimbursementDTO>>> getReimbursementByUserId(@PathVariable Long userId,
                                                                                             @RequestParam(defaultValue = "0") int page,
@@ -50,6 +59,11 @@ public class ReimbursementController {
         return ResponseEntity.ok(ResponseWrapper.ok(reimbursementResult.getData(), "Reimbursements successfully fetched by user Id("+ userId + ")"));
     }
 
+    @Operation(summary = "Get Reimbursement by ID", description = "Retrieve a reimbursement by its unique ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reimbursement successfully fetched."),
+            @ApiResponse(responseCode = "404", description = "Reimbursement not found.")
+    })
     @GetMapping("/{reimbursementId}")
     public ResponseEntity<ResponseWrapper<ReimbursementDTO>> getReimbursementById(@PathVariable Long reimbursementId) {
         Result<ReimbursementDTO> reimbursementResult = reimbursementService.getReimbursementById(reimbursementId);
@@ -60,6 +74,12 @@ public class ReimbursementController {
         return ResponseEntity.ok(ResponseWrapper.ok(reimbursementResult.getData(), "Reimbursements successfully fetched by Id("+ reimbursementId + ")"));
     }
 
+    @Operation(summary = "Create Reimbursement", description = "Create a new reimbursement.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reimbursement successfully created."),
+            @ApiResponse(responseCode = "400", description = "Invalid input data."),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user.")
+    })
     @PostMapping
     public ResponseEntity<ResponseWrapper<Void>> createReimbursement(@Valid @RequestBody ReimbursementInsertDTO reimbursementInsertDTO,
                                                                      BindingResult bindingResult,
