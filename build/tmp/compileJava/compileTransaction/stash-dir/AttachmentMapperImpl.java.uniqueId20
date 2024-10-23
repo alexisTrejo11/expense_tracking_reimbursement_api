@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-23T12:58:49-0600",
+    date = "2024-10-23T12:58:04-0600",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.9.jar, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
@@ -20,10 +20,6 @@ public class AttachmentMapperImpl implements AttachmentMapper {
         }
 
         AttachmentDTO attachmentDTO = new AttachmentDTO();
-
-        attachmentDTO.setId( expenseAttachment.getId() );
-        attachmentDTO.setAttachmentUrl( expenseAttachment.getAttachmentUrl() );
-        attachmentDTO.setUploadedAt( expenseAttachment.getUploadedAt() );
 
         return attachmentDTO;
     }

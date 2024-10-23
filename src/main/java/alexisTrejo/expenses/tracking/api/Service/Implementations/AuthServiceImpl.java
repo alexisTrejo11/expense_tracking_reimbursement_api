@@ -11,6 +11,7 @@ import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.AuthService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Cacheable(value = "emailCheckCache", key = "#userInsertDTO.email")
     public Result<Void> validateRegisterCredentials(UserInsertDTO userInsertDTO) {
         Optional<User> optionalUser = userRepository.findByEmail(userInsertDTO.getEmail());
         if (optionalUser.isPresent()) {
@@ -52,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Cacheable(value = "userCredentialsCache", key = "#loginDTO.email")
     public Result<UserDTO> validateLoginCredentials(LoginDTO loginDTO) {
          Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
          if (optionalUser.isEmpty()) {

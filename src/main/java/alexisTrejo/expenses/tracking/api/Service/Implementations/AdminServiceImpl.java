@@ -10,6 +10,7 @@ import alexisTrejo.expenses.tracking.api.Repository.ReimbursementRepository;
 import alexisTrejo.expenses.tracking.api.Repository.SettingsRepository;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Cacheable("adminDashboardCache")
     public AdminDashboardDTO getAdminDashboard() {
         DashboardStatsDTO statsDTO = getDashboardStats();
         int pendingReimbursements = expenseRepository.countPendingReimbursement();
@@ -64,6 +66,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Cacheable("adminSettingsCache")
     public SettingsDTO getCurrentSettings() {
         List<AdminSettings> adminSettings = settingsRepository.findAll();
         AdminSettings currentSettings  = adminSettings.get(0);

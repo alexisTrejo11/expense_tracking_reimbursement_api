@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-23T12:58:49-0600",
+    date = "2024-10-23T12:58:04-0600",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.9.jar, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
@@ -21,16 +21,9 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        User user = new User();
+        Long id = null;
 
-        user.setEmail( userInsertDTO.getEmail() );
-        user.setPassword( userInsertDTO.getPassword() );
-        user.setFirstName( userInsertDTO.getFirstName() );
-        user.setLastName( userInsertDTO.getLastName() );
-        user.setDepartment( userInsertDTO.getDepartment() );
-
-        user.setCreatedAt( java.time.LocalDateTime.now() );
-        user.setUpdatedAt( java.time.LocalDateTime.now() );
+        User user = new User( id );
 
         return user;
     }
@@ -43,15 +36,6 @@ public class UserMapperImpl implements UserMapper {
 
         UserDTO userDTO = new UserDTO();
 
-        userDTO.setEmail( user.getEmail() );
-        userDTO.setFirstName( user.getFirstName() );
-        userDTO.setLastName( user.getLastName() );
-        userDTO.setDepartment( user.getDepartment() );
-        userDTO.setId( user.getId() );
-        userDTO.setPassword( user.getPassword() );
-        userDTO.setRole( user.getRole() );
-        userDTO.setActive( user.getActive() );
-
         return userDTO;
     }
 
@@ -63,11 +47,6 @@ public class UserMapperImpl implements UserMapper {
 
         ProfileDTO profileDTO = new ProfileDTO();
 
-        profileDTO.setEmail( user.getEmail() );
-        profileDTO.setFirstName( user.getFirstName() );
-        profileDTO.setLastName( user.getLastName() );
-        profileDTO.setDepartment( user.getDepartment() );
-
         return profileDTO;
     }
 
@@ -76,11 +55,5 @@ public class UserMapperImpl implements UserMapper {
         if ( userInsertDTO == null ) {
             return;
         }
-
-        user.setEmail( userInsertDTO.getEmail() );
-        user.setPassword( userInsertDTO.getPassword() );
-        user.setFirstName( userInsertDTO.getFirstName() );
-        user.setLastName( userInsertDTO.getLastName() );
-        user.setDepartment( userInsertDTO.getDepartment() );
     }
 }

@@ -13,6 +13,8 @@ import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -54,6 +56,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
 
+    @Override
+    @Cacheable(value = "expensesByStatusCache", key = "#expenseStatus")
     public Page<ExpenseDTO> getAllExpenseByStatus(ExpenseStatus expenseStatus, Pageable sortedPageable) {
         Page<Expense> expenses = expenseRepository.findByStatus(expenseStatus, sortedPageable);
 
@@ -61,6 +65,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    @Cacheable(value = "expenseSummaryCache", key = "'summary_' + #startDate + '_' + #endDate")
     public ExpenseSummary getExpenseSummaryByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
             CompletableFuture<ExpenseSummary> expenseSummaryFuture = expenseDomainService.generateExpenseSummary(startDate, endDate);
             return expenseSummaryFuture.join();
@@ -69,6 +74,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "userExpensesCache", key = "#userId")
     public ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, Long userId, ExpenseStatus expenseStatus) {
         Expense expense = expenseMapper.insertDtoToEntity(expenseInsertDTO);
         expense.setStatus(expenseStatus);
