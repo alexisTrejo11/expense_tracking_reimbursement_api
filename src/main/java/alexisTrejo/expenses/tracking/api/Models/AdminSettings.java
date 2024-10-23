@@ -26,5 +26,11 @@ public class AdminSettings {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    public AdminSettings(Double maxExpenseLimit, List<String> allowedCategories) {
+        this.maxExpenseLimit = maxExpenseLimit;
+        this.allowedCategories = allowedCategories;
+        this.updatedAt = LocalDateTime.now();
+    }
 }
 

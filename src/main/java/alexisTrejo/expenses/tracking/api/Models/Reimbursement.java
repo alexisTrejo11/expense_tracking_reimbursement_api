@@ -16,8 +16,8 @@ public class Reimbursement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "expense_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expense_id")
     private Expense expense;
 
     @ManyToOne(fetch = FetchType.LAZY)

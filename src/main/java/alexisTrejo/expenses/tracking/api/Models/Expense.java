@@ -49,6 +49,10 @@ public class Expense {
     @JoinColumn(name = "approved_by")
     private User approvedBy;  // Manager who approved the expense
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reimbursement_id")
+    private Reimbursement reimbursement;
+
     @OneToMany(mappedBy = "expense", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ExpenseAttachment> expenseAttachments;
 
