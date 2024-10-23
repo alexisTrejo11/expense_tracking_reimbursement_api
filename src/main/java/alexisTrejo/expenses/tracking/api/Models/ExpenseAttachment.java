@@ -24,5 +24,11 @@ public class ExpenseAttachment {
 
     @Column(nullable = false)
     private LocalDateTime uploadedAt;
+
+    public ExpenseAttachment(Expense expense, String attachmentUrl) {
+        this.expense = expense;
+        this.attachmentUrl = attachmentUrl;
+        this.uploadedAt = LocalDateTime.now();
+    }
 }
 

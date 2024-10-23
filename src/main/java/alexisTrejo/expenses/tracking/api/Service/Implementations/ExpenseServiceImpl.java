@@ -137,5 +137,10 @@ public class ExpenseServiceImpl implements ExpenseService {
     private boolean isExpensePending(Expense expense) {
         return expense.getStatus() == ExpenseStatus.PENDING;
     }
+
+    @Override
+    public boolean isExpenseExisting(Long expenseId) {
+        return expenseRepository.existsById(expenseId);
+    }
 }
 

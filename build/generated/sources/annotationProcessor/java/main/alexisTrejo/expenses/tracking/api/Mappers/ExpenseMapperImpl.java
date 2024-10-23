@@ -1,19 +1,27 @@
 package alexisTrejo.expenses.tracking.api.Mappers;
 
+import alexisTrejo.expenses.tracking.api.DTOs.Attachements.AttachmentDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseInsertDTO;
 import alexisTrejo.expenses.tracking.api.Models.Expense;
+import alexisTrejo.expenses.tracking.api.Models.ExpenseAttachment;
 import alexisTrejo.expenses.tracking.api.Models.User;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-22T15:22:38-0600",
+    date = "2024-10-22T21:30:04-0600",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.9.jar, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
 public class ExpenseMapperImpl implements ExpenseMapper {
+
+    @Autowired
+    private AttachmentMapper attachmentMapper;
 
     @Override
     public Expense insertDtoToEntity(ExpenseInsertDTO expenseInsertDTO) {
@@ -46,6 +54,7 @@ public class ExpenseMapperImpl implements ExpenseMapper {
 
         expenseDTO.setApprovedById( expenseApprovedById( expense ) );
         expenseDTO.setUserId( expenseUserId( expense ) );
+        expenseDTO.setAttachments( expenseAttachmentListToAttachmentDTOList( expense.getExpenseAttachments() ) );
         expenseDTO.setId( expense.getId() );
         expenseDTO.setAmount( expense.getAmount() );
         expenseDTO.setCategory( expense.getCategory() );
@@ -86,5 +95,18 @@ public class ExpenseMapperImpl implements ExpenseMapper {
             return null;
         }
         return id;
+    }
+
+    protected List<AttachmentDTO> expenseAttachmentListToAttachmentDTOList(List<ExpenseAttachment> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<AttachmentDTO> list1 = new ArrayList<AttachmentDTO>( list.size() );
+        for ( ExpenseAttachment expenseAttachment : list ) {
+            list1.add( attachmentMapper.entityToDTO( expenseAttachment ) );
+        }
+
+        return list1;
     }
 }

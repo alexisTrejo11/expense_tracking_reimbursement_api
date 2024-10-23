@@ -1,5 +1,6 @@
 package alexisTrejo.expenses.tracking.api.DTOs.Expenses;
 
+import alexisTrejo.expenses.tracking.api.DTOs.Attachements.AttachmentDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.User.ProfileDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseCategory;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Setter
 @Getter
@@ -43,5 +45,8 @@ public class ExpenseDTO {
 
     @JsonProperty("rejection_reason")
     private String rejectionReason;
+
+    @JsonProperty("attachments")
+    private List<AttachmentDTO> attachments;
 
 }

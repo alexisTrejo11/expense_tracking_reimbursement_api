@@ -23,5 +23,6 @@ public interface ExpenseService {
     Result<ExpenseDTO> rejectExpense(ExpenseRejectDTO expenseRejectDTO);
 
     Result<Void> softDeleteExpenseById(Long expenseId);
+    boolean isExpenseExisting(Long expenseId);
 
 }

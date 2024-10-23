@@ -7,6 +7,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -47,6 +49,9 @@ public class Expense {
     @JoinColumn(name = "approved_by")
     private User approvedBy;  // Manager who approved the expense
 
+    @OneToMany(mappedBy = "expense", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ExpenseAttachment> expenseAttachments;
+
     @Column
     private String rejectionReason;
 
@@ -66,13 +71,17 @@ public class Expense {
         this.deletedAt = LocalDateTime.now();
     }
 
-    public void setAsAppoved() {
-        this.status = ExpenseStatus.APPROVED;
-    }
-
     public void setAsRejected(String rejectionReason) {
         this.status = ExpenseStatus.REJECTED;
         this.rejectionReason = rejectionReason;
     }
+
+    public void addAttachment(ExpenseAttachment expenseAttachment) {
+        if (this.expenseAttachments == null) {
+            this.expenseAttachments = new ArrayList<>();
+        }
+        this.expenseAttachments.add(expenseAttachment);
+    }
+
 }
 

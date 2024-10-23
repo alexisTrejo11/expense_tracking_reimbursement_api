@@ -14,7 +14,6 @@ public class EmailServiceImpl {
     @Autowired
     private JavaMailSender mailSender;
 
-
     @Async("taskExecutor")
     public void sendNotificationFromNotification(Notification notification) {
        User user = notification.getUser();
