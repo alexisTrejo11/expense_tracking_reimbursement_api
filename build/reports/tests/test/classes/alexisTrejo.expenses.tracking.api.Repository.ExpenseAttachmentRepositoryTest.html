@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - ExpenseAttachmentRepositoryTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>ExpenseAttachmentRepositoryTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/alexisTrejo.expenses.tracking.api.Repository.html">alexisTrejo.expenses.tracking.api.Repository</a> &gt; ExpenseAttachmentRepositoryTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">3</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.062s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">whenDelete_thenAttachmentShouldNotBeFound()</td>
+<td class="success">0.006s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">whenSave_thenFindById()</td>
+<td class="success">0.050s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">whenUpdate_thenAttachmentShouldBeUpdated()</td>
+<td class="success">0.006s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2024-10-24T23:25:36.999-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [alexisTrejo.expenses.tracking.api.Repository.ExpenseAttachmentRepositoryTest]: ExpenseAttachmentRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-10-24T23:25:37.009-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration alexisTrejo.expenses.tracking.api.Application for test class alexisTrejo.expenses.tracking.api.Repository.ExpenseAttachmentRepositoryTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.4)
+
+2024-10-24T23:25:37.022-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] .e.t.a.R.ExpenseAttachmentRepositoryTest : Starting ExpenseAttachmentRepositoryTest using Java 17.0.11 with PID 88726 (started by alexistrejo in /Users/alexistrejo/Downloads/expense_tracking_reimbursement_api)
+2024-10-24T23:25:37.022-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] .e.t.a.R.ExpenseAttachmentRepositoryTest : The following 1 profile is active: &quot;test&quot;
+2024-10-24T23:25:37.062-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-24T23:25:37.072-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 9 ms. Found 6 JPA repository interfaces.
+2024-10-24T23:25:37.078-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] beddedDataSourceBeanFactoryPostProcessor : Replacing 'dataSource' DataSource bean with embedded version
+2024-10-24T23:25:37.086-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:24c49e75-b95f-4268-873b-ac73efbfe4ba;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2024-10-24T23:25:37.185-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-24T23:25:37.186-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-10-24T23:25:37.200-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-24T23:25:37.205-06:00  WARN 88726 --- [expenses.tracking.api] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-10-24T23:25:37.277-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    drop table if exists admin_settings cascade 
+Hibernate: 
+    drop table if exists allowed_categories cascade 
+Hibernate: 
+    drop table if exists expense_attachment cascade 
+Hibernate: 
+    drop table if exists expenses cascade 
+Hibernate: 
+    drop table if exists notification cascade 
+Hibernate: 
+    drop table if exists reimbursement cascade 
+Hibernate: 
+    drop table if exists users cascade 
+Hibernate: 
+    create table admin_settings (
+        max_expense_limit float(53) not null,
+        id bigint generated by default as identity,
+        updated_at timestamp(6) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table allowed_categories (
+        settings_id bigint not null,
+        category varchar(255)
+    )
+Hibernate: 
+    create table expense_attachment (
+        expense_id bigint not null,
+        id bigint generated by default as identity,
+        uploaded_at timestamp(6) not null,
+        attachment_url varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table expenses (
+        amount float(53) not null,
+        date date not null,
+        approved_by bigint,
+        created_at timestamp(6) not null,
+        deleted_at timestamp(6),
+        id bigint generated by default as identity,
+        reimbursement_id bigint unique,
+        updated_at timestamp(6) not null,
+        user_id bigint,
+        description varchar(500) not null,
+        receipt_url varchar(255) not null,
+        rejection_reason varchar(255),
+        category enum ('ENTERTAINMENT','FOOD','MISCELLANEOUS','OFFICE_SUPPLIES','SOFTWARE_LICENSES','TRAVEL') not null,
+        status enum ('APPROVED','PENDING','REIMBURSED','REJECTED') not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table notification (
+        read boolean not null,
+        created_at timestamp(6) not null,
+        id bigint generated by default as identity,
+        user_id bigint not null,
+        message varchar(255) not null,
+        type enum ('EXPENSE_APPROVAL','EXPENSE_REJECTION','REIMBURSEMENT_COMPLETED') not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table reimbursement (
+        reimbursement_date date not null,
+        created_at timestamp(6) not null,
+        expense_id bigint unique,
+        id bigint generated by default as identity,
+        processed_by bigint not null,
+        updated_at timestamp(6) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table users (
+        active boolean not null,
+        created_at timestamp(6) not null,
+        id bigint generated by default as identity,
+        last_login timestamp(6) not null,
+        updated_at timestamp(6) not null,
+        department varchar(255) not null,
+        email varchar(255) not null unique,
+        first_name varchar(255) not null,
+        last_name varchar(255) not null,
+        password varchar(255) not null,
+        role enum ('ADMIN','EMPLOYEE','FINANCE','MANAGER') not null,
+        primary key (id)
+    )
+Hibernate: 
+    alter table if exists allowed_categories 
+       add constraint FKctu469m8qpk9841jhqrgh4er5 
+       foreign key (settings_id) 
+       references admin_settings
+Hibernate: 
+    alter table if exists expense_attachment 
+       add constraint FKl3gocjyxiuxakfqd1lhsek6h7 
+       foreign key (expense_id) 
+       references expenses
+Hibernate: 
+    alter table if exists expenses 
+       add constraint FK8ffry9dmehqjc8f8ye6hsac2w 
+       foreign key (approved_by) 
+       references users
+Hibernate: 
+    alter table if exists expenses 
+       add constraint FKmvpn20dgextu85yrmky0q2j5f 
+       foreign key (reimbursement_id) 
+       references reimbursement
+Hibernate: 
+    alter table if exists expenses 
+       add constraint FKhpk0n2cbnfiuu5nrgl0ika3hq 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    alter table if exists notification 
+       add constraint FKnk4ftb5am9ubmkv1661h15ds9 
+       foreign key (user_id) 
+       references users
+Hibernate: 
+    alter table if exists reimbursement 
+       add constraint FKfw8d4g4jk7fbe4lf26imsujgp 
+       foreign key (expense_id) 
+       references expenses
+Hibernate: 
+    alter table if exists reimbursement 
+       add constraint FK3r9fdtjetanbp9ei37bhdjyu4 
+       foreign key (processed_by) 
+       references users
+2024-10-24T23:25:37.304-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-24T23:25:37.349-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] .e.t.a.R.ExpenseAttachmentRepositoryTest : Started ExpenseAttachmentRepositoryTest in 0.339 seconds (process running for 4.708)
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expenses
+        (amount, approved_by, category, created_at, date, deleted_at, description, receipt_url, reimbursement_id, rejection_reason, status, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expense_attachment
+        (attachment_url, expense_id, uploaded_at, id) 
+    values
+        (?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expenses
+        (amount, approved_by, category, created_at, date, deleted_at, description, receipt_url, reimbursement_id, rejection_reason, status, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expense_attachment
+        (attachment_url, expense_id, uploaded_at, id) 
+    values
+        (?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expenses
+        (amount, approved_by, category, created_at, date, deleted_at, description, receipt_url, reimbursement_id, rejection_reason, status, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expense_attachment
+        (attachment_url, expense_id, uploaded_at, id) 
+    values
+        (?, ?, ?, default)
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.9</a> at Oct 24, 2024, 11:25:37 PM</p>
+</div>
+</div>
+</body>
+</html>

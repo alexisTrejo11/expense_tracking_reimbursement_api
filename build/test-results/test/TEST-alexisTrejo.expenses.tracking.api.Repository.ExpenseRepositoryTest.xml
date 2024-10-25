@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="alexisTrejo.expenses.tracking.api.Repository.ExpenseRepositoryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-10-25T05:25:37" hostname="Alexiss-MacBook-Air.local" time="0.067">
+  <properties/>
+  <testcase name="whenDelete_thenExpenseShouldNotBeFound()" classname="alexisTrejo.expenses.tracking.api.Repository.ExpenseRepositoryTest" time="0.04"/>
+  <testcase name="whenUpdate_thenExpenseShouldBeUpdated()" classname="alexisTrejo.expenses.tracking.api.Repository.ExpenseRepositoryTest" time="0.01"/>
+  <testcase name="whenFindAll_thenAllExpensesShouldBeReturned()" classname="alexisTrejo.expenses.tracking.api.Repository.ExpenseRepositoryTest" time="0.01"/>
+  <testcase name="whenSave_thenFindById()" classname="alexisTrejo.expenses.tracking.api.Repository.ExpenseRepositoryTest" time="0.005"/>
+  <system-out><![CDATA[2024-10-24T23:25:37.417-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [alexisTrejo.expenses.tracking.api.Repository.ExpenseRepositoryTest]: ExpenseRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-10-24T23:25:37.420-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration alexisTrejo.expenses.tracking.api.Application for test class alexisTrejo.expenses.tracking.api.Repository.ExpenseRepositoryTest
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expenses
+        (amount, approved_by, category, created_at, date, deleted_at, description, receipt_url, reimbursement_id, rejection_reason, status, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    delete 
+    from
+        expenses 
+    where
+        id=?
+Hibernate: 
+    select
+        e1_0.id,
+        e1_0.amount,
+        e1_0.approved_by,
+        e1_0.category,
+        e1_0.created_at,
+        e1_0.date,
+        e1_0.deleted_at,
+        e1_0.description,
+        e1_0.receipt_url,
+        e1_0.reimbursement_id,
+        e1_0.rejection_reason,
+        e1_0.status,
+        e1_0.updated_at,
+        e1_0.user_id 
+    from
+        expenses e1_0 
+    where
+        e1_0.id=? 
+        and e1_0.deleted_at is null
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expenses
+        (amount, approved_by, category, created_at, date, deleted_at, description, receipt_url, reimbursement_id, rejection_reason, status, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    update
+        expenses 
+    set
+        amount=?,
+        approved_by=?,
+        category=?,
+        created_at=?,
+        date=?,
+        deleted_at=?,
+        description=?,
+        receipt_url=?,
+        reimbursement_id=?,
+        rejection_reason=?,
+        status=?,
+        updated_at=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    select
+        e1_0.id,
+        e1_0.amount,
+        e1_0.approved_by,
+        e1_0.category,
+        e1_0.created_at,
+        e1_0.date,
+        e1_0.deleted_at,
+        e1_0.description,
+        e1_0.receipt_url,
+        e1_0.reimbursement_id,
+        e1_0.rejection_reason,
+        e1_0.status,
+        e1_0.updated_at,
+        e1_0.user_id 
+    from
+        expenses e1_0 
+    where
+        e1_0.id=? 
+        and e1_0.deleted_at is null
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expenses
+        (amount, approved_by, category, created_at, date, deleted_at, description, receipt_url, reimbursement_id, rejection_reason, status, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expenses
+        (amount, approved_by, category, created_at, date, deleted_at, description, receipt_url, reimbursement_id, rejection_reason, status, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        e1_0.id,
+        e1_0.amount,
+        e1_0.approved_by,
+        e1_0.category,
+        e1_0.created_at,
+        e1_0.date,
+        e1_0.deleted_at,
+        e1_0.description,
+        e1_0.receipt_url,
+        e1_0.reimbursement_id,
+        e1_0.rejection_reason,
+        e1_0.status,
+        e1_0.updated_at,
+        e1_0.user_id 
+    from
+        expenses e1_0
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        expenses
+        (amount, approved_by, category, created_at, date, deleted_at, description, receipt_url, reimbursement_id, rejection_reason, status, updated_at, user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        e1_0.id,
+        e1_0.amount,
+        e1_0.approved_by,
+        e1_0.category,
+        e1_0.created_at,
+        e1_0.date,
+        e1_0.deleted_at,
+        e1_0.description,
+        e1_0.receipt_url,
+        e1_0.reimbursement_id,
+        e1_0.rejection_reason,
+        e1_0.status,
+        e1_0.updated_at,
+        e1_0.user_id 
+    from
+        expenses e1_0 
+    where
+        e1_0.id=? 
+        and e1_0.deleted_at is null
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

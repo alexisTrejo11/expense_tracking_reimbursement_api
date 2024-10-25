@@ -74,7 +74,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "userExpensesCache", key = "#userId")
     public ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, Long userId, ExpenseStatus expenseStatus) {
         Expense expense = expenseMapper.insertDtoToEntity(expenseInsertDTO);
         expense.setStatus(expenseStatus);

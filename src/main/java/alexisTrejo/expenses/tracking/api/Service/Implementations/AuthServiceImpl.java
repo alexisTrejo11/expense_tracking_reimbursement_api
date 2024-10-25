@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Can't Process Login"));
 
-        return JWTSecurity.generateToken(user.getId(), user.getEmail() ,user.getRole().toString());
+        return JWTSecurity.generateToken(user.getId(), user.getRole().toString());
     }
 
     @Override
@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Cant Process Login"));
 
-        String JWT = JWTSecurity.generateToken(user.getId(), user.getEmail() ,user.getRole().toString());
+        String JWT = JWTSecurity.generateToken(user.getId(), user.getRole().toString());
 
         user.updateLastLogin();
         userRepository.saveAndFlush(user);

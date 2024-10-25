@@ -139,8 +139,8 @@ public class AuthController {
         return ResponseEntity.ok(ResponseWrapper.ok(JWT, "Login Successfully Completed"));
     }
 
-    @GetMapping("/role")
-    public Object getRole(HttpServletRequest request) {
-        return jwtSecurity.getRolesFromToken(request);
+    @GetMapping("/claims")
+    public Object claims(HttpServletRequest request) {
+        return jwtSecurity.getClaimsFromToken(request);
     }
 }

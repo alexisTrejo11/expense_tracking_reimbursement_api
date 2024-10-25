@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="alexisTrejo.expenses.tracking.api.Repository.UserRepositoryTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-10-25T05:25:37" hostname="Alexiss-MacBook-Air.local" time="0.019">
+  <properties/>
+  <testcase name="whenDelete_thenUserShouldNotBeFound()" classname="alexisTrejo.expenses.tracking.api.Repository.UserRepositoryTest" time="0.006"/>
+  <testcase name="whenFindAll_thenAllUsersShouldBeReturned()" classname="alexisTrejo.expenses.tracking.api.Repository.UserRepositoryTest" time="0.005"/>
+  <testcase name="whenUpdate_thenUserShouldBeUpdated()" classname="alexisTrejo.expenses.tracking.api.Repository.UserRepositoryTest" time="0.003"/>
+  <testcase name="whenSave_thenFindById()" classname="alexisTrejo.expenses.tracking.api.Repository.UserRepositoryTest" time="0.003"/>
+  <system-out><![CDATA[2024-10-24T23:25:37.489-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [alexisTrejo.expenses.tracking.api.Repository.UserRepositoryTest]: UserRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-10-24T23:25:37.491-06:00  INFO 88726 --- [expenses.tracking.api] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration alexisTrejo.expenses.tracking.api.Application for test class alexisTrejo.expenses.tracking.api.Repository.UserRepositoryTest
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.active,
+        u1_0.created_at,
+        u1_0.department,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        users
+        (active, created_at, department, email, first_name, last_login, last_name, password, role, updated_at, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -51,7 +51,7 @@ public class EmployeeExpenseController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @GetMapping("/by-user/{userId}")
-    @PreAuthorize("hasRole('Employee')")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @RequestParam(defaultValue = "0") int page,
@@ -77,7 +77,7 @@ public class EmployeeExpenseController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<ResponseWrapper<Void>> RequestExpense(
             @Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
             BindingResult bindingResult,

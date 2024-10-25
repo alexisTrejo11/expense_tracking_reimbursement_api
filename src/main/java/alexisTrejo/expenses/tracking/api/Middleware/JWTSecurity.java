@@ -31,12 +31,10 @@ import java.util.stream.Collectors;
 public class JWTSecurity extends OncePerRequestFilter {
 
     private final SecretKey secretKey;
-    private final UserDetailsService userDetailsService; // Inject UserDetailsService
 
     @Autowired
-    public JWTSecurity(@Value("${jwt.secret.key}") String secretKey, UserDetailsService userDetailsService) {
+    public JWTSecurity(@Value("${jwt.secret.key}") String secretKey) {
         this.secretKey = new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS256.getJcaName());
-        this.userDetailsService = userDetailsService; // Initialize userDetailsService
     }
 
     @Override
@@ -75,10 +73,11 @@ public class JWTSecurity extends OncePerRequestFilter {
         return null;
     }
 
-    public String generateToken(Long userId, String email, String role) {
-        Claims claims = Jwts.claims().setSubject(email); // Use email as subject
+    public String generateToken(Long userId, String role) {
+        Claims claims = Jwts.claims();
         String roleWithPrefix = "ROLE_" + role;
         claims.put("roles", List.of(roleWithPrefix));
+        claims.put("userId", userId);
 
         Date now = new Date();
         long validityDuration = 3600000; // 1 hour
@@ -90,6 +89,10 @@ public class JWTSecurity extends OncePerRequestFilter {
                 .setExpiration(validity)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public Long getUserId(Claims claims) {
+        return claims.get("userId", Long.class);
     }
 
     public Result<Claims> validateToken(String token) {
@@ -109,9 +112,6 @@ public class JWTSecurity extends OncePerRequestFilter {
         }
     }
 
-    public Long getUserId(Claims claims) {
-        return Long.parseLong(claims.getSubject()); // You may need to adjust this if the subject is email
-    }
 
     @SuppressWarnings("unchecked")
     public List<String> getRoles(Claims claims) {
