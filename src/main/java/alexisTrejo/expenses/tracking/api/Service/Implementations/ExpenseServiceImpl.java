@@ -8,11 +8,10 @@ import alexisTrejo.expenses.tracking.api.Models.Expense;
 import alexisTrejo.expenses.tracking.api.Models.User;
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Repository.ExpenseRepository;
-import alexisTrejo.expenses.tracking.api.Service.DomainService.ExpenseDomainService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -27,19 +26,12 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
+@RequiredArgsConstructor
 public class ExpenseServiceImpl implements ExpenseService {
+
     private final ExpenseRepository expenseRepository;
     private final ExpenseMapper expenseMapper;
-    private final ExpenseDomainService expenseDomainService;
-
-    @Autowired
-    public ExpenseServiceImpl(ExpenseRepository expenseRepository,
-                              ExpenseMapper expenseMapper,
-                              ExpenseDomainService expenseDomainService) {
-        this.expenseRepository = expenseRepository;
-        this.expenseMapper = expenseMapper;
-        this.expenseDomainService = expenseDomainService;
-    }
+    private final ExpenseSummaryService expenseSummaryService;
 
     @Override
     public Result<ExpenseDTO> getExpenseById(Long expenseId) {
@@ -67,7 +59,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     @Cacheable(value = "expenseSummaryCache", key = "'summary_' + #startDate + '_' + #endDate")
     public ExpenseSummary getExpenseSummaryByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-            CompletableFuture<ExpenseSummary> expenseSummaryFuture = expenseDomainService.generateExpenseSummary(startDate, endDate);
+            CompletableFuture<ExpenseSummary> expenseSummaryFuture = expenseSummaryService.generateExpenseSummary(startDate, endDate);
             return expenseSummaryFuture.join();
     }
 

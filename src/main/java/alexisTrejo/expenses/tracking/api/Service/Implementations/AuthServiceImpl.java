@@ -10,6 +10,7 @@ import alexisTrejo.expenses.tracking.api.Models.User;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.AuthService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -18,20 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final JWTSecurity JWTSecurity;
-
-    @Autowired
-    public AuthServiceImpl(UserMapper userMapper,
-                           UserRepository userRepository,
-                           JWTSecurity jwtSecurity) {
-        this.userMapper = userMapper;
-        this.userRepository = userRepository;
-        JWTSecurity = jwtSecurity;
-    }
 
     @Override
     @Cacheable(value = "emailCheckCache", key = "#userInsertDTO.email")

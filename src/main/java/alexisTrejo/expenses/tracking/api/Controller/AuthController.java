@@ -12,6 +12,7 @@ import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("v1/api/auth")
 public class AuthController {
 
@@ -31,13 +33,6 @@ public class AuthController {
     private final AuthService authService;
     private final JWTSecurity jwtSecurity;
 
-    @Autowired
-    public AuthController(UserService userService,
-                          AuthService authService, JWTSecurity jwtSecurity) {
-        this.userService = userService;
-        this.authService = authService;
-        this.jwtSecurity = jwtSecurity;
-    }
 
     @Operation(summary = "Register an employee",
             description = "Registers a new employee and returns a JWT token")

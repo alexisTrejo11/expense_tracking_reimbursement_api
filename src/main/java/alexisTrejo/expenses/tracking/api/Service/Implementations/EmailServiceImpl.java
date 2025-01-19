@@ -2,6 +2,7 @@ package alexisTrejo.expenses.tracking.api.Service.Implementations;
 
 import alexisTrejo.expenses.tracking.api.Models.Notification;
 import alexisTrejo.expenses.tracking.api.Models.User;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,13 +15,11 @@ import org.thymeleaf.context.Context;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EmailServiceImpl {
 
-    @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
-    private TemplateEngine templateEngine;
+    private final JavaMailSender mailSender;
+    private final TemplateEngine templateEngine;
 
     @Async("taskExecutor")
     public void sendEmailFromNotification(Notification notification) {

@@ -9,6 +9,7 @@ import alexisTrejo.expenses.tracking.api.Repository.ExpenseRepository;
 import alexisTrejo.expenses.tracking.api.Repository.ReimbursementRepository;
 import alexisTrejo.expenses.tracking.api.Repository.SettingsRepository;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.AdminService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -17,19 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
     private final SettingsRepository settingsRepository;
     private final ExpenseRepository expenseRepository;
-    private final ReimbursementRepository reimbursementRepository;
-
-    @Autowired
-    public AdminServiceImpl(SettingsRepository settingsRepository,
-                            ExpenseRepository expenseRepository, ReimbursementRepository reimbursementRepository) {
-        this.settingsRepository = settingsRepository;
-        this.expenseRepository = expenseRepository;
-        this.reimbursementRepository = reimbursementRepository;
-    }
 
     @Override
     @Cacheable("adminDashboardCache")

@@ -11,6 +11,7 @@ import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,20 +29,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/v1/api/employees/expenses")
+@RequiredArgsConstructor
 public class EmployeeExpenseController {
 
     private final ExpenseService expenseService;
     private final JWTSecurity jwtSecurity;
     private final NotificationService notificationService;
-
-    @Autowired
-    public EmployeeExpenseController(ExpenseService expenseService,
-                                     JWTSecurity jwtSecurity,
-                                     NotificationService notificationService) {
-        this.expenseService = expenseService;
-        this.jwtSecurity = jwtSecurity;
-        this.notificationService = notificationService;
-    }
 
     @Operation(summary = "Get expenses by user ID",
             description = "Fetches a paginated list of expenses for the authenticated user.")

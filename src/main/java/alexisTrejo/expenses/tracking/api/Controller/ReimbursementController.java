@@ -10,6 +10,7 @@ import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,20 +27,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/v1/api/reimbursements")
+@RequiredArgsConstructor
 public class ReimbursementController {
 
     private final ReimbursementService reimbursementService;
     private final NotificationService notificationService;
     private final JWTSecurity jwtSecurity;
 
-    @Autowired
-    public ReimbursementController(ReimbursementService reimbursementService,
-                                   NotificationService notificationService,
-                                   JWTSecurity jwtSecurity) {
-        this.reimbursementService = reimbursementService;
-        this.notificationService = notificationService;
-        this.jwtSecurity = jwtSecurity;
-    }
 
     @Operation(summary = "Get Reimbursements by User ID", description = "Retrieve all reimbursements for a specific user.")
     @ApiResponses(value = {

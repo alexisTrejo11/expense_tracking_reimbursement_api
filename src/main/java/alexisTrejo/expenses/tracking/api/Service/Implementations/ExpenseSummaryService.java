@@ -1,9 +1,10 @@
-package alexisTrejo.expenses.tracking.api.Service.DomainService;
+package alexisTrejo.expenses.tracking.api.Service.Implementations;
 
 import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Repository.ExpenseRepository;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummaryDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +12,10 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class ExpenseDomainService {
+@RequiredArgsConstructor
+public class ExpenseSummaryService {
 
     private final ExpenseRepository expenseRepository;
-
-    public ExpenseDomainService(ExpenseRepository expenseRepository) {
-        this.expenseRepository = expenseRepository;
-    }
 
     @Async
     public CompletableFuture<ExpenseSummary> generateExpenseSummary(LocalDateTime startDate, LocalDateTime endDate) {

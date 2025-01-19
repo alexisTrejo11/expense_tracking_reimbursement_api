@@ -12,6 +12,7 @@ import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
 import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,20 +32,12 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/v1/api/manager/expenses")
+@RequiredArgsConstructor
 public class ExpenseController {
 
     private final ExpenseService expenseService;
     private final JWTSecurity jwtSecurity;
     private final NotificationService notificationService;
-
-    @Autowired
-    public ExpenseController(ExpenseService expenseService,
-                             JWTSecurity jwtSecurity,
-                             NotificationService notificationService) {
-        this.expenseService = expenseService;
-        this.jwtSecurity = jwtSecurity;
-        this.notificationService = notificationService;
-    }
 
     @Operation(summary = "Get Expense by ID", description = "Fetch an expense by its unique ID.")
     @ApiResponses(value = {

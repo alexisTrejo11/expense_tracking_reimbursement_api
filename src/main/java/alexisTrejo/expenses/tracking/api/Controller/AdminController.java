@@ -9,6 +9,7 @@ import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,21 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/api/admin")
+@RequiredArgsConstructor
 public class AdminController {
 
     private final AdminService adminService;
-    private final ExpenseService expenseService;
-    private final ReimbursementService reimbursementService;
-
-    @Autowired
-    public AdminController(AdminService adminService,
-                           ExpenseService expenseService,
-                           ReimbursementService reimbursementService) {
-        this.adminService = adminService;
-        this.expenseService = expenseService;
-        this.reimbursementService = reimbursementService;
-    }
-
 
     @GetMapping("/dashboard")
     @PreAuthorize("hasRole('ADMIN')")

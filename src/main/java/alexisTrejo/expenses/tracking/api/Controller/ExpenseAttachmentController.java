@@ -7,6 +7,7 @@ import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Utils.File.FileHandler;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,19 +25,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/v1/api/employees/expenses")
+@RequiredArgsConstructor
 public class ExpenseAttachmentController {
+
     private final ExpenseService expenseService;
     private final AttachmentService attachmentService;
     private final FileHandler fileHandler;
-
-    @Autowired
-    public ExpenseAttachmentController(ExpenseService expenseService,
-                                       AttachmentService attachmentService,
-                                       FileHandler fileHandler) {
-        this.expenseService = expenseService;
-        this.attachmentService = attachmentService;
-        this.fileHandler = fileHandler;
-    }
 
     @Operation(summary = "Add an attachment to an expense",
             description = "Uploads a file and associates it with a specific expense.")

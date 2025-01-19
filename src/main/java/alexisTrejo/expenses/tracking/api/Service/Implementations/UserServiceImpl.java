@@ -10,22 +10,18 @@ import alexisTrejo.expenses.tracking.api.Models.enums.Role;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.UserService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
 
     @Override
     public UserDTO createUser(UserInsertDTO userInsertDTO, Role role) {

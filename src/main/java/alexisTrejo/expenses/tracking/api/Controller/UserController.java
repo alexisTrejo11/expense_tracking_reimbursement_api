@@ -6,6 +6,7 @@ import alexisTrejo.expenses.tracking.api.Service.Interfaces.UserService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,15 +20,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/v1/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final JWTSecurity jwtSecurity;
     private final UserService userService;
-
-    public UserController(JWTSecurity jwtSecurity, UserService userService) {
-        this.jwtSecurity = jwtSecurity;
-        this.userService = userService;
-    }
 
     @Operation(summary = "Get My Profile", description = "Retrieve the profile information of the authenticated user.")
     @ApiResponses(value = {
