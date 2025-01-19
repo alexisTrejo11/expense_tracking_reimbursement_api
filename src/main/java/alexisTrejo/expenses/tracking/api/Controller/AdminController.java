@@ -35,13 +35,7 @@ public class AdminController {
 
     @PutMapping("/settings")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseWrapper<String>> updateSettings(@Valid @RequestBody SettingsDTO settingsDTO,
-                                                                  BindingResult bindingResult) {
-        Result<Void> validationResult = Validations.validateDTO(bindingResult);
-        if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
-        }
-
+    public ResponseEntity<ResponseWrapper<String>> updateSettings(@Valid @RequestBody SettingsDTO settingsDTO) {
         adminService.updateSettings(settingsDTO);
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Settings updated successfully"));

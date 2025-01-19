@@ -69,21 +69,12 @@ public class EmployeeExpenseController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @PostMapping
-    public ResponseEntity<ResponseWrapper<ExpenseDTO>> RequestExpense(
-            @Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
-            BindingResult bindingResult,
-            HttpServletRequest request) {
-
+    public ResponseEntity<ResponseWrapper<ExpenseDTO>> RequestExpense(@Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
+                                                                      HttpServletRequest request) {
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
         if (!userIdResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
-        }
-
-        Result<Void> validationResult = Validations.validateDTO(bindingResult);
-        if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
         ExpenseDTO expenseDTO = expenseService.createExpense(expenseInsertDTO, userIdResult.getData(), ExpenseStatus.PENDING);

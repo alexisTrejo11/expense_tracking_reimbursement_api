@@ -9,7 +9,6 @@ import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
-import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -152,16 +150,10 @@ public class ExpenseController {
     @PutMapping("/{expenseId}/reject")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> rejectExpenseStatus(HttpServletRequest request,
-                                                                                 @Valid ExpenseRejectDTO expenseRejectDTO,
-                                                                                 BindingResult bindingResult) {
+                                                                                 @Valid ExpenseRejectDTO expenseRejectDTO) {
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
         if (!userIdResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
-        }
-
-        Result<Void> validationResult = Validations.validateDTO(bindingResult);
-        if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
         Result<ExpenseDTO> expenseResult = expenseService.rejectExpense(expenseRejectDTO);
@@ -169,7 +161,6 @@ public class ExpenseController {
             return ResponseEntity.status(expenseResult.getStatus()).body(ResponseWrapper.error(expenseResult.getErrorMessage(), expenseResult.getStatus().value()));
         }
 
-        // Run in another thread and create and send the notification
         notificationService.sendNotificationFromExpense(expenseResult.getData());
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseRejectDTO.getExpenseId() + " Successfully Rejected"));

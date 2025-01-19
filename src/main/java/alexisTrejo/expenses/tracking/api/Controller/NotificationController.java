@@ -5,16 +5,13 @@ import alexisTrejo.expenses.tracking.api.DTOs.Notification.NotificationInsertDTO
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
-import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,13 +65,7 @@ public class NotificationController {
             @ApiResponse(responseCode = "400", description = "Invalid input data.")
     })
     @PostMapping
-    public ResponseEntity<ResponseWrapper<Void>> createNotification(@Valid @RequestBody NotificationInsertDTO notificationInsertDTO,
-                                                                    BindingResult bindingResult) {
-        Result<Void> validationResult = Validations.validateDTO(bindingResult);
-        if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
-        }
-
+    public ResponseEntity<ResponseWrapper<Void>> createNotification(@Valid @RequestBody NotificationInsertDTO notificationInsertDTO) {
         notificationService.createNotification(notificationInsertDTO);
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Notification Successfully Created"));

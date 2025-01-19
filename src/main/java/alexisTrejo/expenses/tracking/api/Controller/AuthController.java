@@ -40,13 +40,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Bad Request: Invalid input or credentials")
     })
     @PostMapping("/register-employee")
-    public ResponseEntity<ResponseWrapper<String>> registerEmployee(@Valid @RequestBody UserInsertDTO userInsertDTO,
-                                                                    BindingResult bindingResult) {
-        Result<Void> validationResult = Validations.validateDTO(bindingResult);
-        if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
-        }
-
+    public ResponseEntity<ResponseWrapper<String>> registerEmployee(@Valid @RequestBody UserInsertDTO userInsertDTO) {
         Result<Void> credentialsResult = authService.validateRegisterCredentials(userInsertDTO);
         if (!credentialsResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(credentialsResult.getErrorMessage()));
@@ -66,13 +60,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Bad Request: Invalid input or credentials")
     })
     @PostMapping("/register-manager")
-    public ResponseEntity<ResponseWrapper<String>> registerManager(@Valid @RequestBody UserInsertDTO userInsertDTO,
-                                                                   BindingResult bindingResult) {
-        Result<Void> validationResult = Validations.validateDTO(bindingResult);
-        if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
-        }
-
+    public ResponseEntity<ResponseWrapper<String>> registerManager(@Valid @RequestBody UserInsertDTO userInsertDTO) {
         Result<Void> credentialsResult = authService.validateRegisterCredentials(userInsertDTO);
         if (!credentialsResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(credentialsResult.getErrorMessage()));
@@ -92,13 +80,7 @@ public class AuthController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register-admin")
-    public ResponseEntity<ResponseWrapper<String>> registerAdmin(@Valid @RequestBody UserInsertDTO userInsertDTO,
-                                                                 BindingResult bindingResult) {
-        Result<Void> validationResult = Validations.validateDTO(bindingResult);
-        if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
-        }
-
+    public ResponseEntity<ResponseWrapper<String>> registerAdmin(@Valid @RequestBody UserInsertDTO userInsertDTO) {
         Result<Void> credentialsResult = authService.validateRegisterCredentials(userInsertDTO);
         if (!credentialsResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(credentialsResult.getErrorMessage()));
@@ -117,12 +99,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Bad Request: Invalid login credentials")
     })
     @PostMapping("/login")
-    public ResponseEntity<ResponseWrapper<String>> login(@Valid @RequestBody LoginDTO loginDTO, BindingResult bindingResult) {
-        Result<Void> validationResult = Validations.validateDTO(bindingResult);
-        if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
-        }
-
+    public ResponseEntity<ResponseWrapper<String>> login(@Valid @RequestBody LoginDTO loginDTO) {
         Result<UserDTO> credentialsResult = authService.validateLoginCredentials(loginDTO);
         if (!credentialsResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(credentialsResult.getErrorMessage()));

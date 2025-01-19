@@ -7,18 +7,15 @@ import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ReimbursementService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
-import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,16 +77,10 @@ public class ReimbursementController {
     @PostMapping
     @PreAuthorize("hasAnyRole('MANAGER', 'FINANCIAL')")
     public ResponseEntity<ResponseWrapper<Void>> createReimbursement(@Valid @RequestBody ReimbursementInsertDTO reimbursementInsertDTO,
-                                                                     BindingResult bindingResult,
                                                                      HttpServletRequest request) {
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
         if (!userIdResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
-        }
-
-        Result<Void> validationResult = Validations.validateDTO(bindingResult);
-        if (!validationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
         Result<ReimbursementDTO> createResult = reimbursementService.createReimbursement(reimbursementInsertDTO, userIdResult.getData());
@@ -97,7 +88,6 @@ public class ReimbursementController {
             return ResponseEntity.status(createResult.getStatus()).body(ResponseWrapper.badRequest(createResult.getErrorMessage()));
         }
 
-        // Create Notification in another thread async
         notificationService.sendNotificationFromExpense(createResult.getData().getExpense());
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Reimbursement successfully created"));
