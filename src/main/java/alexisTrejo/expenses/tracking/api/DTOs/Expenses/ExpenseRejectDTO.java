@@ -10,6 +10,6 @@ public class ExpenseRejectDTO {
     @JsonProperty("expense_id")
     private Long expenseId;
 
-    @JsonProperty("rejecT_reason")
+    @JsonProperty("reject_reason")
     private String rejectReason;
 }

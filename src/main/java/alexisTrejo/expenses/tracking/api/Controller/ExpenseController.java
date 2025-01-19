@@ -139,13 +139,13 @@ public class ExpenseController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
         }
 
-        Result<ExpenseDTO> updatedResult = expenseService.approveExpense(expenseId, userIdResult.getData());
-        if (!updatedResult.isSuccess()) {
-            return ResponseEntity.status(updatedResult.getStatus()).body(ResponseWrapper.error(updatedResult.getErrorMessage(), updatedResult.getStatus().value()));
+        Result<ExpenseDTO> expenseResult = expenseService.approveExpense(expenseId, userIdResult.getData());
+        if (!expenseResult.isSuccess()) {
+            return ResponseEntity.status(expenseResult.getStatus()).body(ResponseWrapper.error(expenseResult.getErrorMessage(), expenseResult.getStatus().value()));
         }
 
-        // Run in another thread and create and send the notification
-        notificationService.sendNotificationFromExpense(updatedResult.getData());
+        // Run in another thread, create and send the notification
+        notificationService.sendNotificationFromExpense(expenseResult.getData());
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseId + " Successfully Approved"));
     }
@@ -172,13 +172,13 @@ public class ExpenseController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
-        Result<ExpenseDTO> updatedResult = expenseService.rejectExpense(expenseRejectDTO);
-        if (!updatedResult.isSuccess()) {
-            return ResponseEntity.status(updatedResult.getStatus()).body(ResponseWrapper.error(updatedResult.getErrorMessage(), updatedResult.getStatus().value()));
+        Result<ExpenseDTO> expenseResult = expenseService.rejectExpense(expenseRejectDTO);
+        if (!expenseResult.isSuccess()) {
+            return ResponseEntity.status(expenseResult.getStatus()).body(ResponseWrapper.error(expenseResult.getErrorMessage(), expenseResult.getStatus().value()));
         }
 
         // Run in another thread and create and send the notification
-        notificationService.sendNotificationFromExpense(updatedResult.getData());
+        notificationService.sendNotificationFromExpense(expenseResult.getData());
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseRejectDTO.getExpenseId() + " Successfully Rejected"));
     }

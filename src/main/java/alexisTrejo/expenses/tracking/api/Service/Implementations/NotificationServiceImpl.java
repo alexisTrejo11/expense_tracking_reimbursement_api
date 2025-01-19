@@ -87,8 +87,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = notificationDomainService.createNotificationFromExpense(expenseDTO);
         log.info("Notification Successfully created with Id {} for User Id {}", notification.getId(), notification.getUser().getId());
 
-        // Not Working
-        emailServiceImpl.sendNotificationFromNotification(notification);
+        emailServiceImpl.sendEmailFromNotification(notification);
         log.info("Email Successfully Send It To The Email From User Id {}", notification.getUser().getId());
     }
     
