@@ -6,12 +6,11 @@ import alexisTrejo.expenses.tracking.api.DTOs.Auth.UserInsertDTO;
 import alexisTrejo.expenses.tracking.api.Mappers.UserMapper;
 import alexisTrejo.expenses.tracking.api.Middleware.PasswordHandler;
 import alexisTrejo.expenses.tracking.api.Models.User;
-import alexisTrejo.expenses.tracking.api.Models.enums.Role;
+import alexisTrejo.expenses.tracking.api.Utils.enums.Role;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.UserService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

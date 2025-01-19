@@ -1,16 +1,12 @@
 package alexisTrejo.expenses.tracking.api.DTOs.Expenses;
 
-import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseCategory;
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseCategory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 

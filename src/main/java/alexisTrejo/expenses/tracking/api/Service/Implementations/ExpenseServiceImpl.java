@@ -6,7 +6,7 @@ import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseRejectDTO;
 import alexisTrejo.expenses.tracking.api.Mappers.ExpenseMapper;
 import alexisTrejo.expenses.tracking.api.Models.Expense;
 import alexisTrejo.expenses.tracking.api.Models.User;
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Repository.ExpenseRepository;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
@@ -66,7 +66,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "userExpensesCache", key = "#userId")
     public ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, Long userId, ExpenseStatus expenseStatus) {
         Expense expense = expenseMapper.insertDtoToEntity(expenseInsertDTO);
         expense.setStatus(expenseStatus);

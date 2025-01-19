@@ -4,7 +4,7 @@ import alexisTrejo.expenses.tracking.api.DTOs.Auth.LoginDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Auth.UserInsertDTO;
 import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
-import alexisTrejo.expenses.tracking.api.Models.enums.Role;
+import alexisTrejo.expenses.tracking.api.Utils.enums.Role;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.AuthService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.UserService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
@@ -13,7 +13,6 @@ import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,7 +56,7 @@ public class AuthController {
 
         String JWT = authService.ProcessRegister(userDTO);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role:" + Role.EMPLOYEE.name() + " Successfully Registered"));
+        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role ["+ Role.EMPLOYEE.name() +"] Successfully Registered"));
     }
 
     @Operation(summary = "Register a manager",

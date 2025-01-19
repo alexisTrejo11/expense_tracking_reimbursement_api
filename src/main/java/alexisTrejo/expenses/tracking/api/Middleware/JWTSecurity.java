@@ -75,8 +75,8 @@ public class JWTSecurity extends OncePerRequestFilter {
         return null;
     }
 
-    public String generateToken(Long userId, String email, String role) {
-        Claims claims = Jwts.claims().setSubject(email); // Use email as subject
+    public String generateToken(Long userId, String role) {
+        Claims claims = Jwts.claims().setSubject(userId.toString());
         String roleWithPrefix = "ROLE_" + role;
         claims.put("roles", List.of(roleWithPrefix));
 
@@ -110,7 +110,7 @@ public class JWTSecurity extends OncePerRequestFilter {
     }
 
     public Long getUserId(Claims claims) {
-        return Long.parseLong(claims.getSubject()); // You may need to adjust this if the subject is email
+        return Long.parseLong(claims.getSubject());
     }
 
     @SuppressWarnings("unchecked")

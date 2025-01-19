@@ -27,7 +27,6 @@ public class AuthServiceImpl implements AuthService {
     private final JWTSecurity JWTSecurity;
 
     @Override
-    @Cacheable(value = "emailCheckCache", key = "#userInsertDTO.email")
     public Result<Void> validateRegisterCredentials(UserInsertDTO userInsertDTO) {
         Optional<User> optionalUser = userRepository.findByEmail(userInsertDTO.getEmail());
         if (optionalUser.isPresent()) {
@@ -43,18 +42,18 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Can't Process Login"));
 
-        return JWTSecurity.generateToken(user.getId(), user.getEmail() ,user.getRole().toString());
+        return JWTSecurity.generateToken(user.getId(), user.getRole().toString());
     }
 
-    @Override
-    @Cacheable(value = "userCredentialsCache", key = "#loginDTO.email")
-    public Result<UserDTO> validateLoginCredentials(LoginDTO loginDTO) {
-         Optional<User> optionalUser = userRepository.findByEmail(loginDTO.getEmail());
-         if (optionalUser.isEmpty()) {
-              return Result.error("User With Given Credentials Not Found");
-         }
 
-         User user = optionalUser.get();
+    @Override
+    public Result<UserDTO> validateLoginCredentials(LoginDTO loginDTO) {
+        Optional<User> optionalUser = getUserByEmail(loginDTO.getEmail());
+        if (optionalUser.isEmpty()) {
+            return Result.error("User With Given Credentials Not Found");
+        }
+
+        User user = optionalUser.get();
 
         boolean isPasswordCorrect = PasswordHandler.validatePassword(loginDTO.getPassword(), user.getPassword());
         if (!isPasswordCorrect) {
@@ -70,11 +69,17 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Cant Process Login"));
 
-        String JWT = JWTSecurity.generateToken(user.getId(), user.getEmail() ,user.getRole().toString());
+        String JWT = JWTSecurity.generateToken(user.getId(), user.getRole().toString());
 
         user.updateLastLogin();
         userRepository.saveAndFlush(user);
 
         return JWT;
+    }
+
+
+    @Cacheable(value = "userCredentialsCache", key = "#email")
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

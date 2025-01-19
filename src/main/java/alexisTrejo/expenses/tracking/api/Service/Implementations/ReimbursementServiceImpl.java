@@ -6,7 +6,7 @@ import alexisTrejo.expenses.tracking.api.Mappers.ReimbursementMapper;
 import alexisTrejo.expenses.tracking.api.Models.Expense;
 import alexisTrejo.expenses.tracking.api.Models.Reimbursement;
 import alexisTrejo.expenses.tracking.api.Models.User;
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Repository.ExpenseRepository;
 import alexisTrejo.expenses.tracking.api.Repository.ReimbursementRepository;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;

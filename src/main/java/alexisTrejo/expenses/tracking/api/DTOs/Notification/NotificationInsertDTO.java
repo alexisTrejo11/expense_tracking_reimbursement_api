@@ -1,6 +1,6 @@
 package alexisTrejo.expenses.tracking.api.DTOs.Notification;
 
-import alexisTrejo.expenses.tracking.api.Models.enums.NotificationType;
+import alexisTrejo.expenses.tracking.api.Utils.enums.NotificationType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

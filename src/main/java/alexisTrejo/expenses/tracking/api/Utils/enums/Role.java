@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Models.enums;
+package alexisTrejo.expenses.tracking.api.Utils.enums;
 
 public enum Role {
     EMPLOYEE,

@@ -3,7 +3,7 @@ package alexisTrejo.expenses.tracking.api.Service.Interfaces;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseInsertDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseRejectDTO;
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
 import org.springframework.data.domain.Page;

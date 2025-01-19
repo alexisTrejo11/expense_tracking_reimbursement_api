@@ -3,7 +3,7 @@ package alexisTrejo.expenses.tracking.api.Controller;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseInsertDTO;
 import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
@@ -12,7 +12,6 @@ import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,8 +69,7 @@ public class EmployeeExpenseController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseWrapper<Void>> RequestExpense(
+    public ResponseEntity<ResponseWrapper<ExpenseDTO>> RequestExpense(
             @Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
             BindingResult bindingResult,
             HttpServletRequest request) {
@@ -91,6 +89,6 @@ public class EmployeeExpenseController {
         ExpenseDTO expenseDTO = expenseService.createExpense(expenseInsertDTO, userIdResult.getData(), ExpenseStatus.PENDING);
         notificationService.sendNotificationFromExpense(expenseDTO);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense Successfully Requested"));
+        return ResponseEntity.ok(ResponseWrapper.ok(expenseDTO, "Expense Successfully Requested"));
     }
 }

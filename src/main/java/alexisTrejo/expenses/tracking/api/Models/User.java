@@ -1,6 +1,6 @@
 package alexisTrejo.expenses.tracking.api.Models;
 
-import alexisTrejo.expenses.tracking.api.Models.enums.Role;
+import alexisTrejo.expenses.tracking.api.Utils.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

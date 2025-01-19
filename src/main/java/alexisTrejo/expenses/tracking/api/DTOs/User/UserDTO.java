@@ -1,6 +1,6 @@
 package alexisTrejo.expenses.tracking.api.DTOs.User;
 
-import alexisTrejo.expenses.tracking.api.Models.enums.Role;
+import alexisTrejo.expenses.tracking.api.Utils.enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;

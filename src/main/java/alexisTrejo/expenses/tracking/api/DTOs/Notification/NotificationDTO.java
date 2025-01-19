@@ -1,11 +1,9 @@
 package alexisTrejo.expenses.tracking.api.DTOs.Notification;
 
-import alexisTrejo.expenses.tracking.api.Models.enums.NotificationType;
+import alexisTrejo.expenses.tracking.api.Utils.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor

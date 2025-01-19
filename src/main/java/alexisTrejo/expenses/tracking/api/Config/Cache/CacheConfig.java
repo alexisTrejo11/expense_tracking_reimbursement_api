@@ -18,7 +18,6 @@ public class CacheConfig {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager(
                 "adminDashboardCache",
                 "adminSettingsCache",
-                "emailCheckCache",
                 "userCredentialsCache"
         );
 

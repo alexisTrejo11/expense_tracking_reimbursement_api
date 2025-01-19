@@ -1,6 +1,6 @@
 package alexisTrejo.expenses.tracking.api.Models;
 
-import alexisTrejo.expenses.tracking.api.Models.enums.NotificationType;
+import alexisTrejo.expenses.tracking.api.Utils.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

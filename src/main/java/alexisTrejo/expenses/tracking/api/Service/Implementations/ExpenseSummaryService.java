@@ -1,6 +1,6 @@
 package alexisTrejo.expenses.tracking.api.Service.Implementations;
 
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Repository.ExpenseRepository;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummaryDTO;

@@ -1,8 +1,7 @@
 package alexisTrejo.expenses.tracking.api.Repository;
 
-import alexisTrejo.expenses.tracking.api.DTOs.Dashboard.DashboardStatsDTO;
 import alexisTrejo.expenses.tracking.api.Models.Expense;
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummaryDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

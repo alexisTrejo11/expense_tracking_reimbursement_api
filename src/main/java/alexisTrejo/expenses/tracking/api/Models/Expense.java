@@ -1,7 +1,7 @@
 package alexisTrejo.expenses.tracking.api.Models;
 
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseCategory;
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseCategory;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

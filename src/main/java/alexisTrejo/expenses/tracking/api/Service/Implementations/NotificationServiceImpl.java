@@ -6,8 +6,8 @@ import alexisTrejo.expenses.tracking.api.DTOs.Notification.NotificationInsertDTO
 import alexisTrejo.expenses.tracking.api.Mappers.NotificationMapper;
 import alexisTrejo.expenses.tracking.api.Models.Notification;
 import alexisTrejo.expenses.tracking.api.Models.User;
-import alexisTrejo.expenses.tracking.api.Models.enums.ExpenseStatus;
-import alexisTrejo.expenses.tracking.api.Models.enums.NotificationType;
+import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
+import alexisTrejo.expenses.tracking.api.Utils.enums.NotificationType;
 import alexisTrejo.expenses.tracking.api.Repository.NotificationRepository;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
