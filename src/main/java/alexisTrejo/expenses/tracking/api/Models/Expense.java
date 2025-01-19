@@ -12,8 +12,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Table(name = "expenses")
 public class Expense {
 
