@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Utils;
+package alexisTrejo.expenses.tracking.api.Utils.Exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -48,6 +48,12 @@ public class CustomGlobalExceptionHandler {
                 .body("Rate limit exceeded. Please try again later.");
     }
     */
+
+    @ExceptionHandler(TokenValidationException.class)
+    public ResponseEntity<String> handleTokenExpiredException(TokenValidationException ex) {
+        return new ResponseEntity<>("Authorization Error: " + Objects.requireNonNull(ex).getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
 
     /* Not Found Exception */
     @ExceptionHandler(EntityNotFoundException.class)

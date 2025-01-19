@@ -50,7 +50,8 @@ public class AuthController {
 
         String JWT = authService.ProcessRegister(userDTO);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role ["+ Role.EMPLOYEE.name() +"] Successfully Registered"));
+        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role ["+ Role.EMPLOYEE.name() +"] " +
+                "Successfully Registered"));
     }
 
     @Operation(summary = "Register a manager",
@@ -69,7 +70,9 @@ public class AuthController {
         UserDTO userDTO = userService.createUser(userInsertDTO, Role.MANAGER);
 
         String JWT = authService.ProcessRegister(userDTO);
-        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role:" + Role.MANAGER.name() + " Successfully Registered"));
+
+        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role [" + Role.MANAGER.name() + "] " +
+                "Successfully Registered"));
     }
 
     @Operation(summary = "Register an admin",
@@ -89,7 +92,9 @@ public class AuthController {
         UserDTO userDTO = userService.createUser(userInsertDTO, Role.ADMIN);
 
         String JWT = authService.ProcessRegister(userDTO);
-        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role:" + Role.ADMIN.name() + " Successfully Registered"));
+
+        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role [" + Role.ADMIN.name() + "] " +
+                "Successfully Registered"));
     }
 
     @Operation(summary = "Login user",
@@ -102,16 +107,12 @@ public class AuthController {
     public ResponseEntity<ResponseWrapper<String>> login(@Valid @RequestBody LoginDTO loginDTO) {
         Result<UserDTO> credentialsResult = authService.validateLoginCredentials(loginDTO);
         if (!credentialsResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.badRequest(credentialsResult.getErrorMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseWrapper.badRequest(credentialsResult.getErrorMessage()));
         }
 
         String JWT = authService.ProcessLogin(credentialsResult.getData());
 
         return ResponseEntity.ok(ResponseWrapper.ok(JWT, "Login Successfully Completed"));
-    }
-
-    @GetMapping("/role")
-    public Object getRole(HttpServletRequest request) {
-        return jwtSecurity.getRolesFromToken(request);
     }
 }

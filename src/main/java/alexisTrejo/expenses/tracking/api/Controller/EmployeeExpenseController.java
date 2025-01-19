@@ -44,12 +44,9 @@ public class EmployeeExpenseController {
     })
     @GetMapping("/by-user/{userId}")
     @PreAuthorize("hasRole('Employee')")
-    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(
-            @Parameter(description = "ID of the user") @PathVariable Long userId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            HttpServletRequest request) {
-
+    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(HttpServletRequest request,
+                                                                           @RequestParam(defaultValue = "0") int page,
+                                                                           @RequestParam(defaultValue = "10") int size) {
         Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
         if (!userIdResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -58,6 +55,7 @@ public class EmployeeExpenseController {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserId(userIdResult.getData(), pageable);
+
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched"));
     }
 
