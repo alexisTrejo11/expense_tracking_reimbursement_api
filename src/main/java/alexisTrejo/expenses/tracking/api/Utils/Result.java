@@ -19,8 +19,6 @@ public class Result<T> {
     @JsonProperty("error")
     private String errorMessage;
 
-    @JsonProperty("status")
-    private HttpStatus status = HttpStatus.OK;
 
 
     @JsonCreator
@@ -38,14 +36,6 @@ public class Result<T> {
 
     public static <T> Result<T> error(String errorMessage) {
         return new Result<>(false, null, errorMessage);
-    }
-
-    public static <T> Result<T> error(String errorMessage, HttpStatus status) {
-        Result<T> result = new Result<>();
-        result.success = false;
-        result.errorMessage = errorMessage;
-        result.status = status;
-        return result;
     }
 
     public static Result<Void> success() {

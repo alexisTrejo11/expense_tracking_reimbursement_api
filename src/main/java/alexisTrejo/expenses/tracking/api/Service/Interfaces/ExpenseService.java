@@ -19,10 +19,8 @@ public interface ExpenseService {
     ExpenseSummary getExpenseSummaryByDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
     ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, String email, ExpenseStatus expenseStatus);
-    Result<ExpenseDTO> approveExpense(Long expenseId, String managerEmail);
-    Result<ExpenseDTO> rejectExpense(ExpenseRejectDTO expenseRejectDTO);
+    ExpenseDTO approveExpense(Long expenseId, String managerEmail);
+    ExpenseDTO rejectExpense(ExpenseRejectDTO expenseRejectDTO);
 
-    Result<Void> softDeleteExpenseById(Long expenseId);
-
-
+    void softDeleteExpenseById(Long expenseId);
 }

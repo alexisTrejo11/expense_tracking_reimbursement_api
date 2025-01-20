@@ -38,6 +38,17 @@ public class ResponseWrapper<T> {
         );
     }
 
+    public static <T> ResponseWrapper<T> deleted(String entity) {
+        String message = entity  +" successfully created";
+        return new ResponseWrapper<>(
+                true,
+                null,
+                message,
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+    }
+
     public static <T> ResponseWrapper<T> created(T data, String entity) {
         String message = entity + " with successfully created";
         return new ResponseWrapper<>(

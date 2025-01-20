@@ -46,7 +46,7 @@ public class ExpenseController {
         ExpenseDTO expenseDTO = expenseService.getExpenseById(expenseId);
         if (expenseDTO == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ResponseWrapper.notFound("Expense With Id [" + expenseId + "] not found"));
+                    .body(ResponseWrapper.notFound("Expense", "ID", expenseId));
         }
 
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTO, "Expense Data Successfully Fetched"));
@@ -78,7 +78,7 @@ public class ExpenseController {
         Sort.Direction direction = !isSortedASC ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, "createdAt");
 
-        // If params status received is invalid return PENDING as default
+        // Pending Status as default to avoid null problems
         ExpenseStatus expenseStatus = ExpenseStatus.findStatus(status).orElse(ExpenseStatus.PENDING);
 
         Pageable sortedPage = PageRequest.of(page, size, sort);
@@ -95,14 +95,14 @@ public class ExpenseController {
     public ResponseWrapper<ExpenseSummary> getExpenseSummaryByDateRange(@RequestParam(required = false) LocalDateTime startDate,
                                                                         @RequestParam(required = false) LocalDateTime endDate) {
 
-        // If both startDate or endDate are null, get the current month summary
+        // Default range (current month)
         if (startDate == null || endDate == null) {
             LocalDate currentDate = LocalDate.now();
             LocalDateTime startMonth = LocalDateTime.of(currentDate.getYear(), currentDate.getMonth(), 1, 0, 0);
             LocalDateTime endMonth = LocalDateTime.of(currentDate.getYear(), currentDate.getMonth(), currentDate.lengthOfMonth(), 23, 59, 59);
 
-            // Fetch the monthly summary
             ExpenseSummary monthlySummary = expenseService.getExpenseSummaryByDateRange(startMonth, endMonth);
+
             return ResponseWrapper.ok(monthlySummary, "Monthly Expense Summary Successfully Fetched With Date Range: " + monthlySummary.getSummaryDateRange());
         }
 
@@ -118,20 +118,16 @@ public class ExpenseController {
             @ApiResponse(responseCode = "404", description = "Expense not found.")
     })
     @PutMapping("{expenseId}/approve")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> approveExpense(HttpServletRequest request,
                                                                             @PathVariable Long expenseId) {
 
         String email= jwtService.getEmailFromRequest(request);
 
-        Result<ExpenseDTO> expenseResult = expenseService.approveExpense(expenseId, email);
-        if (!expenseResult.isSuccess()) {
-            return ResponseEntity.status(expenseResult.getStatus()).body(ResponseWrapper.error(expenseResult.getErrorMessage(), expenseResult.getStatus().value()));
-        }
+        ExpenseDTO expense = expenseService.approveExpense(expenseId, email);
 
-        notificationService.sendNotificationFromExpense(expenseResult.getData());
+        notificationService.sendNotificationFromExpense(expense);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseId + " Successfully Approved"));
+        return ResponseEntity.ok(ResponseWrapper.ok("Expense With Id " + expenseId + " Successfully Approved"));
     }
 
     @Operation(summary = "Reject Expense", description = "Reject a specific expense with a reason.")
@@ -142,31 +138,23 @@ public class ExpenseController {
             @ApiResponse(responseCode = "404", description = "Expense not found.")
     })
     @PutMapping("/{expenseId}/reject")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> rejectExpenseStatus(@Valid ExpenseRejectDTO expenseRejectDTO) {
+        ExpenseDTO expense = expenseService.rejectExpense(expenseRejectDTO);
 
-        Result<ExpenseDTO> expenseResult = expenseService.rejectExpense(expenseRejectDTO);
-        if (!expenseResult.isSuccess()) {
-            return ResponseEntity.status(expenseResult.getStatus()).body(ResponseWrapper.error(expenseResult.getErrorMessage(), expenseResult.getStatus().value()));
-        }
+        notificationService.sendNotificationFromExpense(expense);
 
-        notificationService.sendNotificationFromExpense(expenseResult.getData());
-
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseRejectDTO.getExpenseId() + " Successfully Rejected"));
+        return ResponseEntity.ok(ResponseWrapper.ok("Expense With Id " + expenseRejectDTO.getExpenseId() + " Successfully Rejected"));
     }
 
     @Operation(summary = "Soft Delete Expense by ID", description = "Soft delete an expense by its unique ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Expense successfully deleted."),
-            @ApiResponse(responseCode = "404", description = "Expense not found.")
+            @ApiResponse(responseCode = "404", description = "Expense not found."),
+            @ApiResponse(responseCode = "500", description = "Server Error.")
     })
     @DeleteMapping("/{expenseId}")
     public ResponseEntity<ResponseWrapper<Void>> deleteExpense(@PathVariable Long expenseId) {
-        Result<Void> result = expenseService.softDeleteExpenseById(expenseId);
-        if (!result.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(result.getErrorMessage()));
-        }
-
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense Successfully Deleted"));
+        expenseService.softDeleteExpenseById(expenseId);
+        return ResponseEntity.ok(ResponseWrapper.deleted("Expense"));
     }
 }
