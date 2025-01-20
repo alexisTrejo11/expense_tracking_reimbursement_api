@@ -70,6 +70,7 @@ dependencies {
 
 	// Migrations
 	implementation 'org.flywaydb:flyway-core:9.22.0'
+
 }
 
 dependencyManagement {

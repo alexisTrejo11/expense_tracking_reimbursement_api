@@ -69,7 +69,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     @Transactional
     public ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, String email, ExpenseStatus expenseStatus) {
-
         Expense expense = expenseMapper.insertDtoToEntity(expenseInsertDTO);
         expense.setStatus(expenseStatus);
         expense.setUser(getUser(email));
