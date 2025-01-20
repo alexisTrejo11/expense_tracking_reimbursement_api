@@ -59,7 +59,7 @@ public class EmployeeExpenseController {
             @ApiResponse(responseCode = "400", description = "Wrong Data Entry/ Logic Business errors")
     })
     @PostMapping
-    public ResponseEntity<ResponseWrapper<ExpenseDTO>> RequestExpense(@Valid @RequestBody ExpenseInsertDTO insertDTO,
+    public ResponseEntity<ResponseWrapper<ExpenseDTO>> requestExpense(@Valid @RequestBody ExpenseInsertDTO insertDTO,
                                                                       HttpServletRequest request) {
         String email = jwtService.getEmailFromRequest(request);
 
@@ -67,7 +67,6 @@ public class EmployeeExpenseController {
         if (validationResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
-
         }
 
         ExpenseDTO expenseDTO = expenseService.createExpense(insertDTO, email, ExpenseStatus.PENDING);

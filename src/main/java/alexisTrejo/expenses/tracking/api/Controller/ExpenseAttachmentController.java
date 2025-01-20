@@ -5,12 +5,12 @@ import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.AttachmentService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Utils.File.FileHandler;
+import alexisTrejo.expenses.tracking.api.Utils.MessageGenerator;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +30,7 @@ public class ExpenseAttachmentController {
     private final ExpenseService expenseService;
     private final AttachmentService attachmentService;
     private final FileHandler fileHandler;
+    private final MessageGenerator message;
 
     @Operation(summary = "Add an attachment to an expense",
             description = "Uploads a file and associates it with a specific expense.")
@@ -45,8 +46,7 @@ public class ExpenseAttachmentController {
 
         ExpenseDTO expense = expenseService.getExpenseById(expenseId);
         if (expense == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ResponseWrapper.notFound("Expense with Id [" + expenseId + "] not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound("Expense", "ID", expenseId));
         }
 
         Result<String> fileUrlResult = fileHandler.uploadAttachmentFile(expense, file);
@@ -57,7 +57,7 @@ public class ExpenseAttachmentController {
 
         attachmentService.createAttachment(expenseId, fileUrlResult.getData());
 
-        return ResponseEntity.ok(ResponseWrapper.ok( "Attachment Successfully Added to Expense With Id [" + expenseId + "]"));
+        return ResponseEntity.ok(ResponseWrapper.success( "Attachment Successfully Added to Expense With Id [" + expenseId + "]"));
     }
 
     @Operation(summary = "Get attachments by expense ID",
@@ -67,16 +67,13 @@ public class ExpenseAttachmentController {
             @ApiResponse(responseCode = "404", description = "Expense not found")
     })
     @GetMapping("/{expenseId}/attachments")
-    public ResponseEntity<ResponseWrapper<List<AttachmentDTO>>> getAttachmentsByExpenseId(
-            @Parameter(description = "ID of the expense") @PathVariable Long expenseId) {
-
-        Result<List<AttachmentDTO>> expenseResult = attachmentService.getAttachmentsByExpenseId(expenseId);
-        if (!expenseResult.isSuccess()) {
+    public ResponseEntity<ResponseWrapper<List<AttachmentDTO>>> getAttachmentsByExpenseId(@PathVariable Long expenseId) {
+        List<AttachmentDTO> expenses = attachmentService.getAttachmentsByExpenseId(expenseId);
+        if (expenses == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ResponseWrapper.notFound("Expense with Id [" + expenseId + "] not found"));
+                    .body(ResponseWrapper.notFound("Expense", "expenseId", expenseId));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(expenseResult.getData(),
-                "Attachment successfully fetched expense with Id [" + expenseId + "]"));
+        return ResponseEntity.ok(ResponseWrapper.found(expenses, "Expenses", "expenseId", expenseId));
     }
 }

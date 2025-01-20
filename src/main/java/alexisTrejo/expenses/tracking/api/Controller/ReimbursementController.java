@@ -72,13 +72,15 @@ public class ReimbursementController {
                                                                      HttpServletRequest request) {
         String email = jwtService.getEmailFromRequest(request);
 
-        Result<ReimbursementDTO> createResult = reimbursementService.createReimbursement(reimbursementInsertDTO, email);
-        if (!createResult.isSuccess()){
-            return ResponseEntity.status(createResult.getStatus()).body(ResponseWrapper.badRequest(createResult.getErrorMessage()));
+        Result<Void> validationResult = reimbursementService.validate(reimbursementInsertDTO);
+        if (!validationResult.isSuccess()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
 
-        notificationService.sendNotificationFromExpense(createResult.getData().getExpense());
+        ReimbursementDTO reimbursement = reimbursementService.createReimbursement(reimbursementInsertDTO, email);
+        notificationService.sendNotificationFromExpense(reimbursement.getExpense());
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Reimbursement successfully created"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.created("Reimbursement"));
     }
 }

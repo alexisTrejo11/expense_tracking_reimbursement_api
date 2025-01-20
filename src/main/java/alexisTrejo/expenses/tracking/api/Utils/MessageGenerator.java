@@ -1,7 +1,5 @@
 package alexisTrejo.expenses.tracking.api.Utils;
 
-import org.springframework.http.HttpStatus;
-
 public class MessageGenerator {
     public Result<Void> generateErrorMessage(String entityName, String action) {
         return Result.error(entityName + " " + action + " failed");
@@ -27,6 +25,11 @@ public class MessageGenerator {
     public String notFoundPlain(String entityName, Object parameter, Object value ) {
         return entityName + " with " + parameter  + " ["+ value  +"] +  not found";
     }
+
+    public String successAction(String entityName, String action) {
+        return entityName + " successfully" + action ;
+    }
+
 
 }
 

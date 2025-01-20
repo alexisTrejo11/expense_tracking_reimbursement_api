@@ -40,6 +40,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.error(userResult.getErrorMessage(), HttpStatus.NOT_FOUND.value()));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(userResult.getData(), "User Profile Successfully Fetched"));
+        return ResponseEntity.ok(ResponseWrapper.success(userResult.getData(), "User Profile Successfully Fetched"));
     }
 }

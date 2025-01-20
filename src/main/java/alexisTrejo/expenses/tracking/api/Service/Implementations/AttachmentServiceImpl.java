@@ -22,16 +22,13 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final AttachmentMapper attachmentMapper;
 
     @Override
-    public Result<List<AttachmentDTO>> getAttachmentsByExpenseId(Long expenseId) {
+    public List<AttachmentDTO> getAttachmentsByExpenseId(Long expenseId) {
             Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
-             return optionalExpense.map(expense -> {
-                        List<AttachmentDTO> attachmentDTOS = expense.getExpenseAttachments()
-                                .stream()
-                                .map(attachmentMapper::entityToDTO)
-                                .toList();
-
-                        return Result.success(attachmentDTOS);
-                    }).orElseGet(() -> Result.error("Expense with ID " + expenseId + " not found"));
+             return optionalExpense.map(expense -> expense.getExpenseAttachments()
+                     .stream()
+                     .map(attachmentMapper::entityToDTO)
+                     .toList())
+                     .orElse(null);
     }
 
     @Override

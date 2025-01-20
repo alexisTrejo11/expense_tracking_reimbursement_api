@@ -7,7 +7,6 @@ import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
-import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.Summary.ExpenseSummary;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,7 +47,7 @@ public class ExpenseController {
                     .body(ResponseWrapper.notFound("Expense", "ID", expenseId));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(expenseDTO, "Expense Data Successfully Fetched"));
+        return ResponseEntity.ok(ResponseWrapper.success(expenseDTO, "Expense Data Successfully Fetched"));
     }
 
     @Operation(summary = "Get Expenses by User ID", description = "Fetch expenses associated with a user by user ID.")
@@ -63,7 +61,7 @@ public class ExpenseController {
         Pageable pageable = PageRequest.of(page, size);
         Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserEmail(email, pageable);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched"));
+        return ResponseEntity.ok(ResponseWrapper.success(expenseDTOPage, "Expense Data Successfully Fetched"));
     }
 
     @Operation(summary = "Get Expenses by Status", description = "Fetch expenses based on their status.")
@@ -84,7 +82,7 @@ public class ExpenseController {
         Pageable sortedPage = PageRequest.of(page, size, sort);
         Page<ExpenseDTO> expenseDTOPage = expenseService.getAllExpenseByStatus(expenseStatus, sortedPage);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched. Sorted By: " + expenseStatus.toString() + " (" + direction +")"));
+        return ResponseEntity.ok(ResponseWrapper.success(expenseDTOPage, "Expense Data Successfully Fetched. Sorted By: " + expenseStatus.toString() + " (" + direction +")"));
     }
 
     @Operation(summary = "Get Expense Summary by Date Range", description = "Fetch the summary of expenses within a specified date range.")
@@ -103,12 +101,12 @@ public class ExpenseController {
 
             ExpenseSummary monthlySummary = expenseService.getExpenseSummaryByDateRange(startMonth, endMonth);
 
-            return ResponseWrapper.ok(monthlySummary, "Monthly Expense Summary Successfully Fetched With Date Range: " + monthlySummary.getSummaryDateRange());
+            return ResponseWrapper.success(monthlySummary, "Monthly Expense Summary Successfully Fetched With Date Range: " + monthlySummary.getSummaryDateRange());
         }
 
         ExpenseSummary expenseSummary = expenseService.getExpenseSummaryByDateRange(startDate, endDate);
 
-        return ResponseWrapper.ok(expenseSummary, "Expense Summary Successfully Fetched With Date Range: " + expenseSummary.getSummaryDateRange());
+        return ResponseWrapper.success(expenseSummary, "Expense Summary Successfully Fetched With Date Range: " + expenseSummary.getSummaryDateRange());
     }
 
     @Operation(summary = "Approve Expense", description = "Approve a specific expense by its ID.")
@@ -126,7 +124,7 @@ public class ExpenseController {
 
         notificationService.sendNotificationFromExpense(expense);
 
-        return ResponseEntity.ok(ResponseWrapper.ok("Expense With Id " + expenseId + " Successfully Approved"));
+        return ResponseEntity.ok(ResponseWrapper.success("Expense With Id " + expenseId + " Successfully Approved"));
     }
 
     @Operation(summary = "Reject Expense", description = "Reject a specific expense with a reason.")
@@ -142,7 +140,7 @@ public class ExpenseController {
 
         notificationService.sendNotificationFromExpense(expense);
 
-        return ResponseEntity.ok(ResponseWrapper.ok("Expense With Id " + expenseRejectDTO.getExpenseId() + " Successfully Rejected"));
+        return ResponseEntity.ok(ResponseWrapper.success("Expense With Id " + expenseRejectDTO.getExpenseId() + " Successfully Rejected"));
     }
 
     @Operation(summary = "Soft Delete Expense by ID", description = "Soft delete an expense by its unique ID.")

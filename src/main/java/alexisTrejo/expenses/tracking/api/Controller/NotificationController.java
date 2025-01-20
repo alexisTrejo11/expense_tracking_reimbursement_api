@@ -3,8 +3,8 @@ package alexisTrejo.expenses.tracking.api.Controller;
 import alexisTrejo.expenses.tracking.api.DTOs.Notification.NotificationDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Notification.NotificationInsertDTO;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
+import alexisTrejo.expenses.tracking.api.Utils.MessageGenerator;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
-import alexisTrejo.expenses.tracking.api.Utils.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +24,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final MessageGenerator message;
 
     @Operation(summary = "Get Notification by ID", description = "Retrieve a notification by its unique ID.")
     @ApiResponses(value = {
@@ -74,11 +75,8 @@ public class NotificationController {
     })
     @PutMapping("set-as-read/{notificationId}")
     public ResponseEntity<ResponseWrapper<NotificationDTO>> markNotificationAsRead(@PathVariable Long notificationId) {
-        Result<Void> notificationResult = notificationService.markNotificationAsRead(notificationId);
-        if (!notificationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(notificationResult.getErrorMessage()));
-        }
+       notificationService.markNotificationAsRead(notificationId);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Notification With Id [" + notificationId + "] Successfully Marked As Read"));
+        return ResponseEntity.ok(ResponseWrapper.success(message.successAction("Notification", "mark as read")));
     }
 }

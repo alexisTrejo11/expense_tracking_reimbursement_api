@@ -15,5 +15,5 @@ public interface NotificationService {
     void createNotification(NotificationInsertDTO notificationInsertDTO);
     void sendNotificationFromExpense(ExpenseDTO expenseDTO);
 
-    Result<Void> markNotificationAsRead(Long notificationId);
+    void markNotificationAsRead(Long notificationId);
 }

@@ -6,6 +6,7 @@ import alexisTrejo.expenses.tracking.api.DTOs.Notification.NotificationInsertDTO
 import alexisTrejo.expenses.tracking.api.Mappers.NotificationMapper;
 import alexisTrejo.expenses.tracking.api.Models.Notification;
 import alexisTrejo.expenses.tracking.api.Models.User;
+import alexisTrejo.expenses.tracking.api.Utils.MessageGenerator;
 import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Utils.enums.NotificationType;
 import alexisTrejo.expenses.tracking.api.Repository.NotificationRepository;
@@ -33,6 +34,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final EmailServiceImpl emailServiceImpl;
     private final UserRepository userRepository;
     private final NotificationMapper notificationMapper;
+    private final MessageGenerator message;
 
 
     @Override
@@ -61,7 +63,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = notificationMapper.insertDtoToEntity(notificationInsertDTO);
         notification.setUser(user);
 
-        notificationRepository.saveAndFlush(notification);
+        notificationRepository.save(notification);
     }
 
     @Transactional
@@ -76,15 +78,12 @@ public class NotificationServiceImpl implements NotificationService {
     }
     
     @Override
-    public Result<Void> markNotificationAsRead(Long notificationId) {
-        Optional<Notification> optionalNotification =  notificationRepository.findById(notificationId);
-        return optionalNotification
-                .map(notification -> {
-                    notification.setAsRead();
-                    notificationRepository.saveAndFlush(notification);
-                    return Result.success();
-                })
-                .orElseGet(() -> Result.error("Notification With Id(" + notificationId + ") Not Found"));
+    public void markNotificationAsRead(Long id) {
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(message.notFoundPlain("Notification", "ID", id)));
+
+        notification.setAsRead();
+        notificationRepository.save(notification);
     }
 
 

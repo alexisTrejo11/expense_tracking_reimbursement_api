@@ -6,6 +6,7 @@ import alexisTrejo.expenses.tracking.api.Mappers.ReimbursementMapper;
 import alexisTrejo.expenses.tracking.api.Models.Expense;
 import alexisTrejo.expenses.tracking.api.Models.Reimbursement;
 import alexisTrejo.expenses.tracking.api.Models.User;
+import alexisTrejo.expenses.tracking.api.Utils.MessageGenerator;
 import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Repository.ExpenseRepository;
 import alexisTrejo.expenses.tracking.api.Repository.ReimbursementRepository;
@@ -29,6 +30,7 @@ public class ReimbursementServiceImpl implements ReimbursementService {
     private final ReimbursementMapper reimbursementMapper;
     private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
+    private final MessageGenerator message;
 
     @Override
     public ReimbursementDTO getReimbursementById(Long reimbursementId) {
@@ -52,42 +54,40 @@ public class ReimbursementServiceImpl implements ReimbursementService {
     }
 
     @Override
-    public Result<ReimbursementDTO> createReimbursement(ReimbursementInsertDTO reimbursementInsertDTO, String email) {
+    public ReimbursementDTO createReimbursement(ReimbursementInsertDTO reimbursementInsertDTO, String email) {
         Reimbursement reimbursement = reimbursementMapper.insertDtoToEntity(reimbursementInsertDTO);
+        setReimbursementRelationShips(reimbursementInsertDTO, reimbursement, email);
 
-        Result<Void> relationShipsResult = setReimbursementRelationShips(reimbursementInsertDTO, reimbursement, email);
-        if (!relationShipsResult.isSuccess()) {
-            return Result.error(relationShipsResult.getErrorMessage(), relationShipsResult.getStatus());
-        }
+        reimbursementRepository.saveAndFlush(reimbursement);
 
-        reimbursementRepository.save(reimbursement);
-
-        return Result.success(reimbursementMapper.entityToDTO(reimbursement));
+        return reimbursementMapper.entityToDTO(reimbursement);
     }
 
-    private Result<Void> setReimbursementRelationShips(ReimbursementInsertDTO reimbursementInsertDTO,
-                                                       Reimbursement reimbursement,
-                                                       String userEmail) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("User not found") );
+    private void setReimbursementRelationShips(ReimbursementInsertDTO reimbursementInsertDTO,
+                                               Reimbursement reimbursement,
+                                               String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         Long expenseId = reimbursementInsertDTO.getExpenseId();
-        reimbursement.setProcessedBy(user);
+        Expense expense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new EntityNotFoundException(message.notFoundPlain("Expense", expenseId)));
 
-        Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
-        if (optionalExpense.isEmpty()) {
-            return Result.error("Expense With Id(" + expenseId + ") Not Found", HttpStatus.NOT_FOUND);
+        reimbursement.setProcessedBy(user);
+        reimbursement.setExpense(expense);
+
+    }
+
+    @Override
+    public Result<Void> validate(ReimbursementInsertDTO insertDTO) {
+        Expense expense = expenseRepository.findById(insertDTO.getExpenseId())
+                .orElseThrow(() -> new EntityNotFoundException(message.notFoundPlain("Expense", insertDTO.getExpenseId())));
+
+        if (expense.getStatus() != ExpenseStatus.APPROVED) {
+            return Result.error("Only approved expenses can be reimbursement");
         }
 
-        // Validate Expense
-        ExpenseStatus expenseStatus = optionalExpense.get().getStatus();
-        return switch (expenseStatus) {
-            case REIMBURSED -> Result.error("Expense With Id(" + expenseId + ") Already Has Been Reimbursed", HttpStatus.BAD_REQUEST);
-            case PENDING -> Result.error("Expense With Id(" + expenseId + ") Is Not Approved", HttpStatus.BAD_REQUEST);
-            case REJECTED -> Result.error("Expense With Id(" + expenseId + ") Has Been Rejected", HttpStatus.BAD_REQUEST);
-            case APPROVED -> {
-                reimbursement.setExpense(optionalExpense.get());
-                yield Result.success();
-            }
-        };
+
+        return Result.success();
     }
 }

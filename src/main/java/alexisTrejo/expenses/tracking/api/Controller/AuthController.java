@@ -44,7 +44,7 @@ public class AuthController {
 
         String JWT = authService.ProcessRegister(userDTO);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role ["+ Role.EMPLOYEE.name() +"] " +
+        return ResponseEntity.ok(ResponseWrapper.success(JWT, "User With Role ["+ Role.EMPLOYEE.name() +"] " +
                 "Successfully Registered"));
     }
 
@@ -65,7 +65,7 @@ public class AuthController {
 
         String JWT = authService.ProcessRegister(userDTO);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role [" + Role.MANAGER.name() + "] " +
+        return ResponseEntity.ok(ResponseWrapper.success(JWT, "User With Role [" + Role.MANAGER.name() + "] " +
                 "Successfully Registered"));
     }
 
@@ -87,7 +87,7 @@ public class AuthController {
 
         String JWT = authService.ProcessRegister(userDTO);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "User With Role [" + Role.ADMIN.name() + "] " +
+        return ResponseEntity.ok(ResponseWrapper.success(JWT, "User With Role [" + Role.ADMIN.name() + "] " +
                 "Successfully Registered"));
     }
 
@@ -107,6 +107,6 @@ public class AuthController {
 
         String JWT = authService.processLogin(credentialsResult.getData());
 
-        return ResponseEntity.ok(ResponseWrapper.ok(JWT, "Login Successfully Completed"));
+        return ResponseEntity.ok(ResponseWrapper.success(JWT, "Login Successfully Completed"));
     }
 }

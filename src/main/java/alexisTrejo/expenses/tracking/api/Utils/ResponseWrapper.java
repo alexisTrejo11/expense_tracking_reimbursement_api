@@ -28,7 +28,7 @@ public class ResponseWrapper<T> {
     private LocalDateTime timestamp;
 
 
-    public static <T> ResponseWrapper<T> ok(T data, String message) {
+    public static <T> ResponseWrapper<T> success(T data, String message) {
         return new ResponseWrapper<>(
                 true,
                 data,
@@ -60,6 +60,16 @@ public class ResponseWrapper<T> {
         );
     }
 
+    public static <T> ResponseWrapper<T> success(String message) {
+        return new ResponseWrapper<>(
+                true,
+                null,
+                message,
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+    }
+
     public static <T> ResponseWrapper<T> created(String entity) {
         String message = entity + " with successfully created";
         return new ResponseWrapper<>(
@@ -71,15 +81,6 @@ public class ResponseWrapper<T> {
         );
     }
 
-    public static <T> ResponseWrapper<T> ok(String message) {
-        return new ResponseWrapper<>(
-                true,
-                null,
-                message,
-                HttpStatus.OK.value(),
-                LocalDateTime.now()
-        );
-    }
 
     public static <T> ResponseWrapper<T> found(T data, String entity, Object parameter, Object value) {
         String message = entity + " with " + parameter + " [" + value + "] successfully fetched";

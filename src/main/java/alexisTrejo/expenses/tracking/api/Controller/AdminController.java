@@ -28,13 +28,13 @@ public class AdminController {
     public ResponseEntity<ResponseWrapper<String>> updateSettings(@Valid @RequestBody SettingsDTO settingsDTO) {
         adminService.updateSettings(settingsDTO);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Settings updated successfully"));
+        return ResponseEntity.ok(ResponseWrapper.success(null, "Settings updated successfully"));
     }
 
     @GetMapping("/settings")
     public ResponseWrapper<SettingsDTO> getCurrentSettings() {
         SettingsDTO settingsDTO = adminService.getCurrentSettings();
-        return ResponseWrapper.ok(settingsDTO, "Current Settings Successfully Fetched");
+        return ResponseWrapper.success(settingsDTO, "Current Settings Successfully Fetched");
     }
 
 }

@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface AttachmentService {
 
-    Result<List<AttachmentDTO>> getAttachmentsByExpenseId(Long expenseId);
+    List<AttachmentDTO> getAttachmentsByExpenseId(Long expenseId);
     void createAttachment(Long expenseId, String fileURL);
 }
