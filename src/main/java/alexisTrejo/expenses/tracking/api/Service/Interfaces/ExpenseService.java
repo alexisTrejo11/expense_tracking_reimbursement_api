@@ -15,9 +15,9 @@ public interface ExpenseService {
     ExpenseDTO getExpenseById(Long expenseId);
     Page<ExpenseDTO> getExpenseByUserEmail(String email, Pageable pageable);
     Page<ExpenseDTO> getAllExpenseByStatus(ExpenseStatus expenseStatus, Pageable sortedPage);
-
     ExpenseSummary getExpenseSummaryByDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
+    Result<Void> validate(ExpenseInsertDTO expenseInsertDTO);
     ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, String email, ExpenseStatus expenseStatus);
     ExpenseDTO approveExpense(Long expenseId, String managerEmail);
     ExpenseDTO rejectExpense(ExpenseRejectDTO expenseRejectDTO);

@@ -120,7 +120,6 @@ public class ExpenseController {
     @PutMapping("{expenseId}/approve")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> approveExpense(HttpServletRequest request,
                                                                             @PathVariable Long expenseId) {
-
         String email= jwtService.getEmailFromRequest(request);
 
         ExpenseDTO expense = expenseService.approveExpense(expenseId, email);

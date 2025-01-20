@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -66,6 +67,20 @@ public class ExpenseServiceImpl implements ExpenseService {
             return expenseSummaryFuture.join();
     }
 
+    @Override
+    public Result<Void> validate(ExpenseInsertDTO expenseInsertDTO) {
+        double maxAmount = 100000.0;
+        if (expenseInsertDTO.getAmount() != null && expenseInsertDTO.getAmount() > maxAmount) {
+            return Result.error("Amount exceeds the maximum limit of " + maxAmount);
+        }
+
+        LocalDate maxDate = LocalDate.now().plusMonths(10);
+        if (expenseInsertDTO.getDate() != null && expenseInsertDTO.getDate().isAfter(maxDate)) {
+            return Result.error("Date cannot be in the future. Maximum date is " + maxDate);
+        }
+
+        return Result.success();
+    }
 
     @Override
     @Transactional
