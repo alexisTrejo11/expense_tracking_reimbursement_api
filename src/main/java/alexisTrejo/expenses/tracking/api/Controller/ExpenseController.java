@@ -122,7 +122,7 @@ public class ExpenseController {
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> approveExpense(HttpServletRequest request,
                                                                             @PathVariable Long expenseId) {
 
-        String email= jwtService.getEmailFromTokenRequest(request);
+        String email= jwtService.getEmailFromRequest(request);
 
         Result<ExpenseDTO> expenseResult = expenseService.approveExpense(expenseId, email);
         if (!expenseResult.isSuccess()) {

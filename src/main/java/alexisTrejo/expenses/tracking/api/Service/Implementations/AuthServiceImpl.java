@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -45,11 +46,12 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Can't Process Login"));
 
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("role", user.getRole().name());
-        extraClaims.put("userId", user.getId());
+        Consumer<Map<String, Object>> extraClaimsConsumer = extraClaims -> {
+            extraClaims.put("role", user.getRole().name());
+            extraClaims.put("userId", user.getId());
+        };
 
-        return jwtService.generateToken(extraClaims, getUserDetails(user));
+        return jwtService.generateToken(user, extraClaimsConsumer);
     }
 
     @Override
@@ -75,28 +77,17 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new RuntimeException("Can't Process Login"));
 
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("role", user.getRole().name());
-        extraClaims.put("userId", user.getId());
+        Consumer<Map<String, Object>> extraClaimsConsumer = extraClaims -> {
+            extraClaims.put("role", user.getRole().name());
+            extraClaims.put("userId", user.getId());
+        };
 
-        String jwt = jwtService.generateToken(extraClaims, getUserDetails(user));
+        String jwt = jwtService.generateToken(user, extraClaimsConsumer);
 
         user.updateLastLogin();
         userRepository.saveAndFlush(user);
 
         return jwt;
-    }
-
-    private UserDetails getUserDetails(User user) {
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                getAuthorities(user.getRole())
-        );
-    }
-
-    private Collection<? extends GrantedAuthority> getAuthorities(Role role) {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
 

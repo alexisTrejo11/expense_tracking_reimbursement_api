@@ -70,7 +70,7 @@ public class ReimbursementController {
     @PostMapping
     public ResponseEntity<ResponseWrapper<Void>> createReimbursement(@Valid @RequestBody ReimbursementInsertDTO reimbursementInsertDTO,
                                                                      HttpServletRequest request) {
-        String email = jwtService.getEmailFromTokenRequest(request);
+        String email = jwtService.getEmailFromRequest(request);
 
         Result<ReimbursementDTO> createResult = reimbursementService.createReimbursement(reimbursementInsertDTO, email);
         if (!createResult.isSuccess()){

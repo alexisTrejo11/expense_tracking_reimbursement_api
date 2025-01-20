@@ -33,7 +33,7 @@ public class UserController {
     })
     @GetMapping("/my-profile")
     public ResponseEntity<ResponseWrapper<ProfileDTO>> getMyProfile(HttpServletRequest request) {
-        String email = jwtService.getEmailFromTokenRequest(request);
+        String email = jwtService.getEmailFromRequest(request);
 
         Result<ProfileDTO> userResult = userService.getProfileById(email);
         if (!userResult.isSuccess()) {

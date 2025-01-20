@@ -42,7 +42,7 @@ public class EmployeeExpenseController {
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(HttpServletRequest request,
                                                                            @RequestParam(defaultValue = "0") int page,
                                                                            @RequestParam(defaultValue = "10") int size) {
-        String email = jwtService.getEmailFromTokenRequest(request);
+        String email = jwtService.getEmailFromRequest(request);
 
         Pageable pageable = PageRequest.of(page, size);
         Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserEmail(email, pageable);
@@ -60,7 +60,7 @@ public class EmployeeExpenseController {
     @PostMapping
     public ResponseEntity<ResponseWrapper<ExpenseDTO>> RequestExpense(@Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
                                                                       HttpServletRequest request) {
-        String email = jwtService.getEmailFromTokenRequest(request);
+        String email = jwtService.getEmailFromRequest(request);
 
         ExpenseDTO expenseDTO = expenseService.createExpense(expenseInsertDTO, email, ExpenseStatus.PENDING);
         notificationService.sendNotificationFromExpense(expenseDTO);
