@@ -30,10 +30,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v1/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/v1/api/employees/**").hasRole("EMPLOYEE")
-                        .requestMatchers("/v1/api/manager/**").hasRole("MANAGER")
+                        .requestMatchers("/v1/api/employees/**").authenticated()
+                        .requestMatchers("/v1/api/manager/**").hasAnyRole("MANAGER", "ADMIN")
                         .requestMatchers("/v1/api/reimbursements/**").hasAnyRole("MANAGER", "FINANCIAL")
-                        .requestMatchers("/v1/api/users/**").hasAnyRole("EMPLOYEE","MANAGER", "FINANCIAL", "ADMIN")
+                        .requestMatchers("/v1/api/users/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtSecurity, UsernamePasswordAuthenticationFilter.class)

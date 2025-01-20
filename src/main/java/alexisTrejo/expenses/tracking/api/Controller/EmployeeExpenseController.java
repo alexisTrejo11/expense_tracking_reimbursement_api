@@ -7,22 +7,17 @@ import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
-import alexisTrejo.expenses.tracking.api.Utils.Result;
-import alexisTrejo.expenses.tracking.api.Utils.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -47,14 +42,10 @@ public class EmployeeExpenseController {
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(HttpServletRequest request,
                                                                            @RequestParam(defaultValue = "0") int page,
                                                                            @RequestParam(defaultValue = "10") int size) {
-        Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
-        if (!userIdResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
-        }
+        Long userId = jwtSecurity.getUserIdFromToken(request);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserId(userIdResult.getData(), pageable);
+        Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserId(userId, pageable);
 
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched"));
     }
@@ -69,13 +60,9 @@ public class EmployeeExpenseController {
     @PostMapping
     public ResponseEntity<ResponseWrapper<ExpenseDTO>> RequestExpense(@Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
                                                                       HttpServletRequest request) {
-        Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
-        if (!userIdResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
-        }
+        Long userId = jwtSecurity.getUserIdFromToken(request);
 
-        ExpenseDTO expenseDTO = expenseService.createExpense(expenseInsertDTO, userIdResult.getData(), ExpenseStatus.PENDING);
+        ExpenseDTO expenseDTO = expenseService.createExpense(expenseInsertDTO, userId, ExpenseStatus.PENDING);
         notificationService.sendNotificationFromExpense(expenseDTO);
 
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTO, "Expense Successfully Requested"));

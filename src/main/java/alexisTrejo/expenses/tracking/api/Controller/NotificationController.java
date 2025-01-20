@@ -31,13 +31,13 @@ public class NotificationController {
             @ApiResponse(responseCode = "404", description = "Notification not found.")
     })
     @GetMapping("/{notificationId}")
-    public ResponseEntity<ResponseWrapper<NotificationDTO>> getNotificationById(@PathVariable Long notificationId) {
-        Result<NotificationDTO> notificationResult = notificationService.getNotificationById(notificationId);
-        if (!notificationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(notificationResult.getErrorMessage()));
+    public ResponseEntity<ResponseWrapper<NotificationDTO>> getNotificationById(@PathVariable Long id) {
+        NotificationDTO notification = notificationService.getNotificationById(id);
+        if (notification == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound("Notification","ID", id));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(notificationResult.getData(), "Notification With Id(" + notificationId + ") Successfully Fetched"));
+        return ResponseEntity.ok(ResponseWrapper.found(notification, "Notification", "ID", id));
     }
 
     @Operation(summary = "Get Notifications by User ID", description = "Retrieve all notifications for a specific user.")
@@ -50,13 +50,9 @@ public class NotificationController {
                                                                                           @RequestParam(defaultValue = "0") int page,
                                                                                           @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
+        Page<NotificationDTO> notifications = notificationService.getNotificationByUserId(userId, pageable);
 
-        Result<Page<NotificationDTO>> notificationResult = notificationService.getNotificationByUserId(userId, pageable);
-        if (!notificationResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(notificationResult.getErrorMessage()));
-        }
-
-        return ResponseEntity.ok(ResponseWrapper.ok(notificationResult.getData(), "Notifications With User Id(" + userId + ") Successfully Fetched"));
+        return ResponseEntity.ok(ResponseWrapper.found(notifications, "Notifications", "userID", userId));
     }
 
     @Operation(summary = "Create Notification", description = "Create a new notification.")
@@ -68,7 +64,7 @@ public class NotificationController {
     public ResponseEntity<ResponseWrapper<Void>> createNotification(@Valid @RequestBody NotificationInsertDTO notificationInsertDTO) {
         notificationService.createNotification(notificationInsertDTO);
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Notification Successfully Created"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.created("Notification"));
     }
 
     @Operation(summary = "Mark Notification as Read", description = "Mark a notification as read by its ID.")
@@ -83,6 +79,6 @@ public class NotificationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(notificationResult.getErrorMessage()));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Notification With Id(" + notificationId + ") Successfully Marked As Read"));
+        return ResponseEntity.ok(ResponseWrapper.ok(null, "Notification With Id [" + notificationId + "] Successfully Marked As Read"));
     }
 }

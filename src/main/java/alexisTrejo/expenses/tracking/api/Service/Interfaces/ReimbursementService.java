@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ReimbursementService {
-    Result<ReimbursementDTO> getReimbursementById(Long reimbursementId);
-    Result<Page<ReimbursementDTO>> getReimbursementByUserId(Long userId, Pageable pageable);
+    ReimbursementDTO getReimbursementById(Long reimbursementId);
+    Page<ReimbursementDTO> getReimbursementByUserId(Long userId, Pageable pageable);
     Result<ReimbursementDTO> createReimbursement(ReimbursementInsertDTO reimbursementInsertDTO, Long userId);
 
 }

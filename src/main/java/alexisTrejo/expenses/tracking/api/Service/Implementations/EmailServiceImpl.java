@@ -29,10 +29,10 @@ public class EmailServiceImpl {
             return;
         }
 
-        sendNotificationEmail(notification);
+        sendEmail(notification);
     }
 
-    private void sendNotificationEmail(Notification notification) {
+    private void sendEmail(Notification notification) {
         Context context = new Context();
         User user = notification.getUser();
 

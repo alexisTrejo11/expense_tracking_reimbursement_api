@@ -25,7 +25,6 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/dashboard")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AdminDashboardDTO> getAdminDashboard() {
         AdminDashboardDTO adminDashboard = adminService.getAdminDashboard();
 
@@ -34,7 +33,6 @@ public class AdminController {
 
 
     @PutMapping("/settings")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseWrapper<String>> updateSettings(@Valid @RequestBody SettingsDTO settingsDTO) {
         adminService.updateSettings(settingsDTO);
 
@@ -42,7 +40,6 @@ public class AdminController {
     }
 
     @GetMapping("/settings")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseWrapper<SettingsDTO> getCurrentSettings() {
         SettingsDTO settingsDTO = adminService.getCurrentSettings();
         return ResponseWrapper.ok(settingsDTO, "Current Settings Successfully Fetched");

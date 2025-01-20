@@ -42,14 +42,14 @@ public class ExpenseController {
             @ApiResponse(responseCode = "404", description = "Expense not found.")
     })
     @GetMapping("/{expenseId}")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<ExpenseDTO>> getExpenseById(@PathVariable Long expenseId) {
-        Result<ExpenseDTO> expenseResult = expenseService.getExpenseById(expenseId);
-        if (!expenseResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(expenseResult.getErrorMessage()));
+        ExpenseDTO expenseDTO = expenseService.getExpenseById(expenseId);
+        if (expenseDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ResponseWrapper.notFound("Expense With Id [" + expenseId + "] not found"));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(expenseResult.getData(), "Expense Data Successfully Fetched"));
+        return ResponseEntity.ok(ResponseWrapper.ok(expenseDTO, "Expense Data Successfully Fetched"));
     }
 
     @Operation(summary = "Get Expenses by User ID", description = "Fetch expenses associated with a user by user ID.")
@@ -57,7 +57,6 @@ public class ExpenseController {
             @ApiResponse(responseCode = "200", description = "Expense data successfully fetched."),
     })
     @GetMapping("/by-user/{userId}")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getExpenseByUserId(@PathVariable Long userId,
                                                                                 @RequestParam(defaultValue = "0") int page,
                                                                                 @RequestParam(defaultValue = "10") int size) {
@@ -72,7 +71,6 @@ public class ExpenseController {
             @ApiResponse(responseCode = "200", description = "Expense data successfully fetched."),
     })
     @GetMapping("/by-status")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getExpensesByStatus(@RequestParam String status,
                                                                                  @RequestParam(defaultValue = "0") int page,
                                                                                  @RequestParam(defaultValue = "10") int size,
@@ -80,7 +78,7 @@ public class ExpenseController {
         Sort.Direction direction = !isSortedASC ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(direction, "createdAt");
 
-        // If params status received is not valid return PENDING as default
+        // If params status received is invalid return PENDING as default
         ExpenseStatus expenseStatus = ExpenseStatus.findStatus(status).orElse(ExpenseStatus.PENDING);
 
         Pageable sortedPage = PageRequest.of(page, size, sort);
@@ -94,7 +92,6 @@ public class ExpenseController {
             @ApiResponse(responseCode = "200", description = "Expense summary successfully fetched."),
     })
     @GetMapping("/summary")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseWrapper<ExpenseSummary> getExpenseSummaryByDateRange(@RequestParam(required = false) LocalDateTime startDate,
                                                                         @RequestParam(required = false) LocalDateTime endDate) {
 
@@ -124,17 +121,14 @@ public class ExpenseController {
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> approveExpense(HttpServletRequest request,
                                                                             @PathVariable Long expenseId) {
-        Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
-        if (!userIdResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
-        }
+        Long userId = jwtSecurity.getUserIdFromToken(request);
 
-        Result<ExpenseDTO> expenseResult = expenseService.approveExpense(expenseId, userIdResult.getData());
+
+        Result<ExpenseDTO> expenseResult = expenseService.approveExpense(expenseId, userId);
         if (!expenseResult.isSuccess()) {
             return ResponseEntity.status(expenseResult.getStatus()).body(ResponseWrapper.error(expenseResult.getErrorMessage(), expenseResult.getStatus().value()));
         }
 
-        // Run in another thread, create and send the notification
         notificationService.sendNotificationFromExpense(expenseResult.getData());
 
         return ResponseEntity.ok(ResponseWrapper.ok(null, "Expense With Id " + expenseId + " Successfully Approved"));
@@ -149,12 +143,7 @@ public class ExpenseController {
     })
     @PutMapping("/{expenseId}/reject")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> rejectExpenseStatus(HttpServletRequest request,
-                                                                                 @Valid ExpenseRejectDTO expenseRejectDTO) {
-        Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
-        if (!userIdResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
-        }
+    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> rejectExpenseStatus(@Valid ExpenseRejectDTO expenseRejectDTO) {
 
         Result<ExpenseDTO> expenseResult = expenseService.rejectExpense(expenseRejectDTO);
         if (!expenseResult.isSuccess()) {
@@ -172,7 +161,6 @@ public class ExpenseController {
             @ApiResponse(responseCode = "404", description = "Expense not found.")
     })
     @DeleteMapping("/{expenseId}")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Void>> deleteExpense(@PathVariable Long expenseId) {
         Result<Void> result = expenseService.softDeleteExpenseById(expenseId);
         if (!result.isSuccess()) {

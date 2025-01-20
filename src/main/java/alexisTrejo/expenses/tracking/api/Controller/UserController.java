@@ -33,14 +33,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User profile not found.")
     })
     @GetMapping("/my-profile")
-    @PreAuthorize("hasAnyRole('EMPLOYEE','MANAGER', 'FINANCIAL', 'ADMIN')")
     public ResponseEntity<ResponseWrapper<ProfileDTO>> getMyProfile(HttpServletRequest request) {
-        Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
-        if (!userIdResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
-        }
+        Long userId = jwtSecurity.getUserIdFromToken(request);
 
-        Result<ProfileDTO> userResult = userService.getProfileById(userIdResult.getData());
+        Result<ProfileDTO> userResult = userService.getProfileById(userId);
         if (!userResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.error(userResult.getErrorMessage(), HttpStatus.NOT_FOUND.value()));
         }

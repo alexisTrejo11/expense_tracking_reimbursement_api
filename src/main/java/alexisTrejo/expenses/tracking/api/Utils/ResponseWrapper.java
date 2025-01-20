@@ -38,6 +38,49 @@ public class ResponseWrapper<T> {
         );
     }
 
+    public static <T> ResponseWrapper<T> created(T data, String entity) {
+        String message = entity + " with successfully created";
+        return new ResponseWrapper<>(
+                true,
+                data,
+                message,
+                HttpStatus.CREATED.value(),
+                LocalDateTime.now()
+        );
+    }
+
+    public static <T> ResponseWrapper<T> created(String entity) {
+        String message = entity + " with successfully created";
+        return new ResponseWrapper<>(
+                true,
+                null,
+                message,
+                HttpStatus.CREATED.value(),
+                LocalDateTime.now()
+        );
+    }
+
+    public static <T> ResponseWrapper<T> ok(String message) {
+        return new ResponseWrapper<>(
+                true,
+                null,
+                message,
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+    }
+
+    public static <T> ResponseWrapper<T> found(T data, String entity, Object parameter, Object value) {
+        String message = entity + " with " + parameter + " [" + value + "] successfully fetched";
+        return new ResponseWrapper<>(
+                false,
+                data,
+                message,
+                HttpStatus.OK.value(),
+                LocalDateTime.now()
+        );
+    }
+
     public static <T> ResponseWrapper<T> error(String message, int code) {
         return new ResponseWrapper<>(
                 false,
@@ -49,6 +92,17 @@ public class ResponseWrapper<T> {
     }
 
     public static <T> ResponseWrapper<T> notFound(String message) {
+        return new ResponseWrapper<>(
+                false,
+                null,
+                message,
+                HttpStatus.NOT_FOUND.value(),
+                LocalDateTime.now()
+        );
+    }
+
+    public static <T> ResponseWrapper<T> notFound(String entity, Object parameter, Object value) {
+        String message = entity + " with " + parameter + " [" + value + "] not found";
         return new ResponseWrapper<>(
                 false,
                 null,

@@ -3,20 +3,16 @@ package alexisTrejo.expenses.tracking.api.Controller;
 import alexisTrejo.expenses.tracking.api.DTOs.Auth.LoginDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Auth.UserInsertDTO;
-import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
 import alexisTrejo.expenses.tracking.api.Utils.enums.Role;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.AuthService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.UserService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
-import alexisTrejo.expenses.tracking.api.Utils.Validations;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,8 +26,6 @@ public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
-    private final JWTSecurity jwtSecurity;
-
 
     @Operation(summary = "Register an employee",
             description = "Registers a new employee and returns a JWT token")

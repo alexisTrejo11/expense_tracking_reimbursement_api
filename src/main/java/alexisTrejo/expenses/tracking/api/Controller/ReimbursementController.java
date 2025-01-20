@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,18 +37,13 @@ public class ReimbursementController {
             @ApiResponse(responseCode = "404", description = "No reimbursements found for the user.")
     })
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasAnyRole('MANAGER', 'FINANCIAL')")
     public ResponseEntity<ResponseWrapper<Page<ReimbursementDTO>>> getReimbursementByUserId(@PathVariable Long userId,
                                                                                             @RequestParam(defaultValue = "0") int page,
                                                                                             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
+        Page<ReimbursementDTO> reimbursementPage = reimbursementService.getReimbursementByUserId(userId, pageable);
 
-        Result<Page<ReimbursementDTO>> reimbursementResult = reimbursementService.getReimbursementByUserId(userId, pageable);
-        if (!reimbursementResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(reimbursementResult.getErrorMessage()));
-        }
-
-        return ResponseEntity.ok(ResponseWrapper.ok(reimbursementResult.getData(), "Reimbursements successfully fetched by user Id("+ userId + ")"));
+        return ResponseEntity.ok(ResponseWrapper.found(reimbursementPage, "Reimbursement", "userId", userId));
     }
 
     @Operation(summary = "Get Reimbursement by ID", description = "Retrieve a reimbursement by its unique ID.")
@@ -58,14 +52,13 @@ public class ReimbursementController {
             @ApiResponse(responseCode = "404", description = "Reimbursement not found.")
     })
     @GetMapping("/{reimbursementId}")
-    @PreAuthorize("hasAnyRole('MANAGER', 'FINANCIAL')")
-    public ResponseEntity<ResponseWrapper<ReimbursementDTO>> getReimbursementById(@PathVariable Long reimbursementId) {
-        Result<ReimbursementDTO> reimbursementResult = reimbursementService.getReimbursementById(reimbursementId);
-        if (!reimbursementResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound(reimbursementResult.getErrorMessage()));
+    public ResponseEntity<ResponseWrapper<ReimbursementDTO>> getReimbursementById(@PathVariable Long id) {
+        ReimbursementDTO reimbursement = reimbursementService.getReimbursementById(id);
+        if (reimbursement == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseWrapper.notFound("Reimbursement", "ID", id));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(reimbursementResult.getData(), "Reimbursements successfully fetched by Id("+ reimbursementId + ")"));
+        return ResponseEntity.ok(ResponseWrapper.found(reimbursement, "Reimbursement" ,"ID", id));
     }
 
     @Operation(summary = "Create Reimbursement", description = "Create a new reimbursement.")
@@ -75,15 +68,11 @@ public class ReimbursementController {
             @ApiResponse(responseCode = "401", description = "Unauthorized user.")
     })
     @PostMapping
-    @PreAuthorize("hasAnyRole('MANAGER', 'FINANCIAL')")
     public ResponseEntity<ResponseWrapper<Void>> createReimbursement(@Valid @RequestBody ReimbursementInsertDTO reimbursementInsertDTO,
                                                                      HttpServletRequest request) {
-        Result<Long> userIdResult = jwtSecurity.getUserIdFromToken(request);
-        if (!userIdResult.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseWrapper.unauthorized(userIdResult.getErrorMessage()));
-        }
+        Long userId = jwtSecurity.getUserIdFromToken(request);
 
-        Result<ReimbursementDTO> createResult = reimbursementService.createReimbursement(reimbursementInsertDTO, userIdResult.getData());
+        Result<ReimbursementDTO> createResult = reimbursementService.createReimbursement(reimbursementInsertDTO, userId);
         if (!createResult.isSuccess()){
             return ResponseEntity.status(createResult.getStatus()).body(ResponseWrapper.badRequest(createResult.getErrorMessage()));
         }

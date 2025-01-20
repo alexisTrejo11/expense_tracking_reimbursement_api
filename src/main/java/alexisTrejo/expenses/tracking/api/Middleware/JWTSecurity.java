@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,9 +28,12 @@ import java.util.stream.Collectors;
 @Component
 public class JWTSecurity extends OncePerRequestFilter {
 
+    private final SecretKey secretKey;
+
     @Autowired
-    @Value("${jwt.secret.key}")
-    private SecretKey secretKey;
+    public JWTSecurity(@Value("${jwt.secret.key}") String secretKey) {
+        this.secretKey = new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS256.getJcaName());
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

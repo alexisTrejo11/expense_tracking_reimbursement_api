@@ -34,11 +34,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     private final ExpenseSummaryService expenseSummaryService;
 
     @Override
-    public Result<ExpenseDTO> getExpenseById(Long expenseId) {
+    public ExpenseDTO getExpenseById(Long expenseId) {
         Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
         return optionalExpense
-                .map(expense -> Result.success(expenseMapper.entityToDTO(expense)))
-                .orElseGet(() -> Result.error("Expense With Id(" + expenseId + ") not found"));
+                .map(expenseMapper::entityToDTO)
+                .orElse(null);
     }
 
     @Override

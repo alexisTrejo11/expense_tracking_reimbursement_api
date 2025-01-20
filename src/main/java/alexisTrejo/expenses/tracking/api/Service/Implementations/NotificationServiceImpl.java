@@ -36,24 +36,19 @@ public class NotificationServiceImpl implements NotificationService {
 
 
     @Override
-    public Result<Page<NotificationDTO>> getNotificationByUserId(Long userId, Pageable pageable) {
-        boolean isUserExisting = userRepository.existsById(userId);
-        if (!isUserExisting) {
-            return Result.error("User With Id(" + userId + ") Not Found");
-        }
-
+    public Page<NotificationDTO> getNotificationByUserId(Long userId, Pageable pageable) {
         Page<Notification> notificationPage =  notificationRepository.findByUser_Id(userId, pageable);
-        Page<NotificationDTO> notificationDTOPage = notificationPage.map(notificationMapper::entityToDTO);
-        return Result.success(notificationDTOPage);
+
+        return notificationPage.map(notificationMapper::entityToDTO);
     }
 
     @Override
-    public Result<NotificationDTO> getNotificationById(Long notificationId) {
+    public NotificationDTO getNotificationById(Long notificationId) {
         Optional<Notification> optionalNotification =  notificationRepository.findById(notificationId);
-        return optionalNotification
-                .map(notification -> Result.success(notificationMapper.entityToDTO(notification)))
-                .orElseGet(() -> Result.error("Notification With Id(" + notificationId + ") Not Found"));
 
+        return optionalNotification
+                .map(notificationMapper::entityToDTO)
+                .orElse(null);
     }
 
 

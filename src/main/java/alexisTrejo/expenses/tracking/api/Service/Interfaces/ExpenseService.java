@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 
 public interface ExpenseService {
-    Result<ExpenseDTO> getExpenseById(Long expenseId);
+    ExpenseDTO getExpenseById(Long expenseId);
     Page<ExpenseDTO> getExpenseByUserId(Long userId, Pageable pageable);
     Page<ExpenseDTO> getAllExpenseByStatus(ExpenseStatus expenseStatus, Pageable sortedPage);
 

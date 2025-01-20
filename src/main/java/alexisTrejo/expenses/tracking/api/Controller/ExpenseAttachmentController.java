@@ -8,7 +8,6 @@ import alexisTrejo.expenses.tracking.api.Utils.File.FileHandler;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,18 +39,17 @@ public class ExpenseAttachmentController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @PostMapping("/{expenseId}/attachments")
-    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<ResponseWrapper<Void>> addAttachment(
             @Parameter(description = "ID of the expense") @PathVariable Long expenseId,
             @Parameter(description = "File to be uploaded") @RequestParam(value = "file") MultipartFile file) throws IOException {
 
-        Result<ExpenseDTO> expenseResult = expenseService.getExpenseById(expenseId);
-        if (!expenseResult.isSuccess()) {
+        ExpenseDTO expense = expenseService.getExpenseById(expenseId);
+        if (expense == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ResponseWrapper.notFound("Expense With Id(" + expenseId + ") Not Found"));
+                    .body(ResponseWrapper.notFound("Expense with Id [" + expenseId + "] not found"));
         }
 
-        Result<String> fileUrlResult = fileHandler.uploadAttachmentFile(expenseResult.getData(), file);
+        Result<String> fileUrlResult = fileHandler.uploadAttachmentFile(expense, file);
         if (!fileUrlResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ResponseWrapper.badRequest(fileUrlResult.getErrorMessage()));
@@ -59,7 +57,7 @@ public class ExpenseAttachmentController {
 
         attachmentService.createAttachment(expenseId, fileUrlResult.getData());
 
-        return ResponseEntity.ok(ResponseWrapper.ok(null, "Attachment Successfully Added to Expense With Id(" + expenseId + ")"));
+        return ResponseEntity.ok(ResponseWrapper.ok( "Attachment Successfully Added to Expense With Id [" + expenseId + "]"));
     }
 
     @Operation(summary = "Get attachments by expense ID",
@@ -69,16 +67,16 @@ public class ExpenseAttachmentController {
             @ApiResponse(responseCode = "404", description = "Expense not found")
     })
     @GetMapping("/{expenseId}/attachments")
-    @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<ResponseWrapper<List<AttachmentDTO>>> getAttachmentsByExpenseId(
             @Parameter(description = "ID of the expense") @PathVariable Long expenseId) {
 
         Result<List<AttachmentDTO>> expenseResult = attachmentService.getAttachmentsByExpenseId(expenseId);
         if (!expenseResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ResponseWrapper.notFound("Expense With Id(" + expenseId + ") Not Found"));
+                    .body(ResponseWrapper.notFound("Expense with Id [" + expenseId + "] not found"));
         }
 
-        return ResponseEntity.ok(ResponseWrapper.ok(expenseResult.getData(), "Attachment Successfully Fetched Expense With Id(" + expenseId + ")"));
+        return ResponseEntity.ok(ResponseWrapper.ok(expenseResult.getData(),
+                "Attachment successfully fetched expense with Id [" + expenseId + "]"));
     }
 }

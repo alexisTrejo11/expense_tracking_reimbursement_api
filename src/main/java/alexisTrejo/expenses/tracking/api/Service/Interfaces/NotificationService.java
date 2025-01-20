@@ -9,8 +9,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface NotificationService {
 
-    Result<Page<NotificationDTO>> getNotificationByUserId(Long userId, Pageable pageable);
-    Result<NotificationDTO> getNotificationById(Long notificationId);
+    Page<NotificationDTO> getNotificationByUserId(Long userId, Pageable pageable);
+    NotificationDTO getNotificationById(Long notificationId);
 
     void createNotification(NotificationInsertDTO notificationInsertDTO);
     void sendNotificationFromExpense(ExpenseDTO expenseDTO);

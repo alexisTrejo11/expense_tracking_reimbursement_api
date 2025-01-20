@@ -12,6 +12,7 @@ import alexisTrejo.expenses.tracking.api.Repository.ReimbursementRepository;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ReimbursementService;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,24 +31,24 @@ public class ReimbursementServiceImpl implements ReimbursementService {
     private final ExpenseRepository expenseRepository;
 
     @Override
-    public Result<ReimbursementDTO> getReimbursementById(Long reimbursementId) {
+    public ReimbursementDTO getReimbursementById(Long reimbursementId) {
         Optional<Reimbursement> optionalReimbursement = reimbursementRepository.findById(reimbursementId);
+
         return optionalReimbursement
-                .map(reimbursement -> Result.success(reimbursementMapper.entityToDTO(reimbursement)))
-                .orElseGet(() -> Result.error("Reimbursement With Id(" + reimbursementId + ") Not Found"));
+                .map(reimbursementMapper::entityToDTO)
+                .orElse(null);
     }
 
     @Override
-    public Result<Page<ReimbursementDTO>> getReimbursementByUserId(Long userId, Pageable pageable) {
+    public Page<ReimbursementDTO> getReimbursementByUserId(Long userId, Pageable pageable) {
         boolean isUserExisting = userRepository.existsById(userId);
         if (!isUserExisting) {
-            return Result.error("User With Id(" + userId + ") Not Found");
+            throw new EntityNotFoundException("User With Id [" + userId + "] Not Found");
         }
 
         Page<Reimbursement> reimbursementPage = reimbursementRepository.findByProcessedBy_Id(userId, pageable);
 
-        Page<ReimbursementDTO> reimbursementDTOPage = reimbursementPage.map(reimbursementMapper::entityToDTO);
-        return Result.success(reimbursementDTOPage);
+        return reimbursementPage.map(reimbursementMapper::entityToDTO);
     }
 
     @Override
@@ -85,7 +86,6 @@ public class ReimbursementServiceImpl implements ReimbursementService {
                 reimbursement.setExpense(optionalExpense.get());
                 yield Result.success();
             }
-            default -> Result.error("Invalid Expense Status", HttpStatus.BAD_REQUEST);
         };
     }
 }
