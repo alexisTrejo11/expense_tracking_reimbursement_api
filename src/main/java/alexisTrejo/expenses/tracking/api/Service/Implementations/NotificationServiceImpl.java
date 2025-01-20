@@ -55,13 +55,11 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public void createNotification(NotificationInsertDTO notificationInsertDTO) {
-        boolean isUserExisting = userRepository.existsById(notificationInsertDTO.getUserId());
-        if (!isUserExisting) {
-            throw new RuntimeException("User Not Found");
-        }
+        User user = userRepository.findById(notificationInsertDTO.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User Not Found"));
 
         Notification notification = notificationMapper.insertDtoToEntity(notificationInsertDTO);
-        notification.setUser(new User(notificationInsertDTO.getUserId()));
+        notification.setUser(user);
 
         notificationRepository.saveAndFlush(notification);
     }

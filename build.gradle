@@ -57,7 +57,6 @@ dependencies {
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 	implementation 'org.modelmapper:modelmapper:2.4.4'
 
-
 	// Rate Limiter
 	implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:7.6.0'
 	implementation 'com.github.vladimir-bukhtoyarov:bucket4j-jcache:7.6.0'
@@ -69,7 +68,8 @@ dependencies {
 	// Open Api
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
 
-
+	// Migrations
+	implementation 'org.flywaydb:flyway-core:9.22.0'
 }
 
 dependencyManagement {
