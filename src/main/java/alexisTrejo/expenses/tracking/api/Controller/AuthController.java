@@ -105,7 +105,7 @@ public class AuthController {
                     .body(ResponseWrapper.badRequest(credentialsResult.getErrorMessage()));
         }
 
-        String JWT = authService.ProcessLogin(credentialsResult.getData());
+        String JWT = authService.processLogin(credentialsResult.getData());
 
         return ResponseEntity.ok(ResponseWrapper.ok(JWT, "Login Successfully Completed"));
     }

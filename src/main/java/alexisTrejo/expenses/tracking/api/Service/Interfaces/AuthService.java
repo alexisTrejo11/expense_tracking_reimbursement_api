@@ -10,5 +10,5 @@ public interface AuthService {
     String ProcessRegister(UserDTO userDTO);
 
     Result<UserDTO> validateLoginCredentials(LoginDTO loginDTO);
-    String ProcessLogin(UserDTO userDTO);
+    String processLogin(UserDTO userDTO);
 }

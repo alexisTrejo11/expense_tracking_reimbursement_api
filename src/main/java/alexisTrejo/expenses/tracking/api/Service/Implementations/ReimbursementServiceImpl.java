@@ -52,10 +52,10 @@ public class ReimbursementServiceImpl implements ReimbursementService {
     }
 
     @Override
-    public Result<ReimbursementDTO> createReimbursement(ReimbursementInsertDTO reimbursementInsertDTO, Long userId) {
+    public Result<ReimbursementDTO> createReimbursement(ReimbursementInsertDTO reimbursementInsertDTO, String email) {
         Reimbursement reimbursement = reimbursementMapper.insertDtoToEntity(reimbursementInsertDTO);
 
-        Result<Void> relationShipsResult = setReimbursementRelationShips(reimbursementInsertDTO, reimbursement, userId);
+        Result<Void> relationShipsResult = setReimbursementRelationShips(reimbursementInsertDTO, reimbursement, email);
         if (!relationShipsResult.isSuccess()) {
             return Result.error(relationShipsResult.getErrorMessage(), relationShipsResult.getStatus());
         }
@@ -67,9 +67,11 @@ public class ReimbursementServiceImpl implements ReimbursementService {
 
     private Result<Void> setReimbursementRelationShips(ReimbursementInsertDTO reimbursementInsertDTO,
                                                        Reimbursement reimbursement,
-                                                       Long userId) {
+                                                       String userEmail) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new EntityNotFoundException("User not found") );
+
         Long expenseId = reimbursementInsertDTO.getExpenseId();
-        reimbursement.setProcessedBy(new User(userId));
+        reimbursement.setProcessedBy(user);
 
         Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
         if (optionalExpense.isEmpty()) {

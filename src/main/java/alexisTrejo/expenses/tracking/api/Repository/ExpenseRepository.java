@@ -16,8 +16,8 @@ import java.util.concurrent.CompletableFuture;
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
-    @Query("SELECT e FROM Expense e WHERE e.user.id = :userId AND e.deletedAt IS NULL")
-    Page<Expense> findByUserId(@Param("userId") Long userId, Pageable pageable);
+    @Query("SELECT e FROM Expense e WHERE e.user.email = :email AND e.deletedAt IS NULL")
+    Page<Expense> findByUserEmail(@Param("userId") String email, Pageable pageable);
 
     @Override
     @Query("SELECT e FROM Expense e WHERE e.id = :id AND e.deletedAt IS NULL")

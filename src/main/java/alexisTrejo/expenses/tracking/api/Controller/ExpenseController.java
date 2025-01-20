@@ -2,7 +2,7 @@ package alexisTrejo.expenses.tracking.api.Controller;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseRejectDTO;
-import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
+import alexisTrejo.expenses.tracking.api.Auth.JWTService;
 import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
-    private final JWTSecurity jwtSecurity;
+    private final JWTService jwtService;
     private final NotificationService notificationService;
 
     @Operation(summary = "Get Expense by ID", description = "Fetch an expense by its unique ID.")
@@ -57,11 +57,11 @@ public class ExpenseController {
             @ApiResponse(responseCode = "200", description = "Expense data successfully fetched."),
     })
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getExpenseByUserId(@PathVariable Long userId,
+    public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getExpenseByUserId(@PathVariable String email,
                                                                                 @RequestParam(defaultValue = "0") int page,
                                                                                 @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserId(userId, pageable);
+        Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserEmail(email, pageable);
 
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched"));
     }
@@ -121,10 +121,10 @@ public class ExpenseController {
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> approveExpense(HttpServletRequest request,
                                                                             @PathVariable Long expenseId) {
-        Long userId = jwtSecurity.getUserIdFromToken(request);
 
+        String email= jwtService.getEmailFromTokenRequest(request);
 
-        Result<ExpenseDTO> expenseResult = expenseService.approveExpense(expenseId, userId);
+        Result<ExpenseDTO> expenseResult = expenseService.approveExpense(expenseId, email);
         if (!expenseResult.isSuccess()) {
             return ResponseEntity.status(expenseResult.getStatus()).body(ResponseWrapper.error(expenseResult.getErrorMessage(), expenseResult.getStatus().value()));
         }

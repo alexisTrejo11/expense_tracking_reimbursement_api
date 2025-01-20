@@ -2,7 +2,7 @@ package alexisTrejo.expenses.tracking.api.Controller;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Expenses.ExpenseInsertDTO;
-import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
+import alexisTrejo.expenses.tracking.api.Auth.JWTService;
 import alexisTrejo.expenses.tracking.api.Utils.enums.ExpenseStatus;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ExpenseService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class EmployeeExpenseController {
 
     private final ExpenseService expenseService;
-    private final JWTSecurity jwtSecurity;
+    private final JWTService jwtService;
     private final NotificationService notificationService;
 
     @Operation(summary = "Get expenses by user ID",
@@ -42,10 +42,10 @@ public class EmployeeExpenseController {
     public ResponseEntity<ResponseWrapper<Page<ExpenseDTO>>> getMyExpenses(HttpServletRequest request,
                                                                            @RequestParam(defaultValue = "0") int page,
                                                                            @RequestParam(defaultValue = "10") int size) {
-        Long userId = jwtSecurity.getUserIdFromToken(request);
+        String email = jwtService.getEmailFromTokenRequest(request);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserId(userId, pageable);
+        Page<ExpenseDTO> expenseDTOPage = expenseService.getExpenseByUserEmail(email, pageable);
 
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTOPage, "Expense Data Successfully Fetched"));
     }
@@ -60,9 +60,9 @@ public class EmployeeExpenseController {
     @PostMapping
     public ResponseEntity<ResponseWrapper<ExpenseDTO>> RequestExpense(@Valid @RequestBody ExpenseInsertDTO expenseInsertDTO,
                                                                       HttpServletRequest request) {
-        Long userId = jwtSecurity.getUserIdFromToken(request);
+        String email = jwtService.getEmailFromTokenRequest(request);
 
-        ExpenseDTO expenseDTO = expenseService.createExpense(expenseInsertDTO, userId, ExpenseStatus.PENDING);
+        ExpenseDTO expenseDTO = expenseService.createExpense(expenseInsertDTO, email, ExpenseStatus.PENDING);
         notificationService.sendNotificationFromExpense(expenseDTO);
 
         return ResponseEntity.ok(ResponseWrapper.ok(expenseDTO, "Expense Successfully Requested"));

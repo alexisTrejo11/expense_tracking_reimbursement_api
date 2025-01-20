@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 
 public interface ExpenseService {
     ExpenseDTO getExpenseById(Long expenseId);
-    Page<ExpenseDTO> getExpenseByUserId(Long userId, Pageable pageable);
+    Page<ExpenseDTO> getExpenseByUserEmail(String email, Pageable pageable);
     Page<ExpenseDTO> getAllExpenseByStatus(ExpenseStatus expenseStatus, Pageable sortedPage);
 
     ExpenseSummary getExpenseSummaryByDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
-    ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, Long userId, ExpenseStatus expenseStatus);
-    Result<ExpenseDTO> approveExpense(Long expenseId, Long managerId);
+    ExpenseDTO createExpense(ExpenseInsertDTO expenseInsertDTO, String email, ExpenseStatus expenseStatus);
+    Result<ExpenseDTO> approveExpense(Long expenseId, String managerEmail);
     Result<ExpenseDTO> rejectExpense(ExpenseRejectDTO expenseRejectDTO);
 
     Result<Void> softDeleteExpenseById(Long expenseId);

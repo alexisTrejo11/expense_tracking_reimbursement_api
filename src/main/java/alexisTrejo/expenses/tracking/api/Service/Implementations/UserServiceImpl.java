@@ -4,7 +4,7 @@ import alexisTrejo.expenses.tracking.api.DTOs.User.ProfileDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Auth.UserInsertDTO;
 import alexisTrejo.expenses.tracking.api.Mappers.UserMapper;
-import alexisTrejo.expenses.tracking.api.Middleware.PasswordHandler;
+import alexisTrejo.expenses.tracking.api.Utils.PasswordHandler;
 import alexisTrejo.expenses.tracking.api.Models.User;
 import alexisTrejo.expenses.tracking.api.Utils.enums.Role;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
@@ -42,11 +42,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result<ProfileDTO> getProfileById(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
+    public Result<ProfileDTO> getProfileById(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         return optionalUser
                 .map(user -> Result.success(userMapper.entityToProfileDTO(user)))
-                .orElseGet(() -> Result.error("User with id " + userId + " not found") );
+                .orElseGet(() -> Result.error("User with email [" + email + "] not found") );
     }
 
     @Override

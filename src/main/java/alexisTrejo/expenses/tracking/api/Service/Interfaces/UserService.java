@@ -8,7 +8,7 @@ import alexisTrejo.expenses.tracking.api.Utils.Result;
 
 public interface UserService {
     Result<UserDTO> getUserById(Long userId);
-    Result<ProfileDTO> getProfileById(Long userId);
+    Result<ProfileDTO> getProfileById(String email);
 
     UserDTO createUser(UserInsertDTO userInsertDTO, Role role);
     Result<Void> updateUser(Long userId, UserInsertDTO userInsertDTO);

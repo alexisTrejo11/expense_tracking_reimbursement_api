@@ -66,10 +66,6 @@ public class Expense {
 
     private LocalDateTime deletedAt;
 
-    public void setUserId(Long userId) {
-        this.user = new User(userId);
-    }
-
     public void setAsDeleted() {
         this.deletedAt = LocalDateTime.now();
     }

@@ -2,7 +2,7 @@ package alexisTrejo.expenses.tracking.api.Controller;
 
 import alexisTrejo.expenses.tracking.api.DTOs.Reimbursement.ReimbursementDTO;
 import alexisTrejo.expenses.tracking.api.DTOs.Reimbursement.ReimbursementInsertDTO;
-import alexisTrejo.expenses.tracking.api.Middleware.JWTSecurity;
+import alexisTrejo.expenses.tracking.api.Auth.JWTService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.NotificationService;
 import alexisTrejo.expenses.tracking.api.Service.Interfaces.ReimbursementService;
 import alexisTrejo.expenses.tracking.api.Utils.ResponseWrapper;
@@ -28,7 +28,7 @@ public class ReimbursementController {
 
     private final ReimbursementService reimbursementService;
     private final NotificationService notificationService;
-    private final JWTSecurity jwtSecurity;
+    private final JWTService jwtService;
 
 
     @Operation(summary = "Get Reimbursements by User ID", description = "Retrieve all reimbursements for a specific user.")
@@ -70,9 +70,9 @@ public class ReimbursementController {
     @PostMapping
     public ResponseEntity<ResponseWrapper<Void>> createReimbursement(@Valid @RequestBody ReimbursementInsertDTO reimbursementInsertDTO,
                                                                      HttpServletRequest request) {
-        Long userId = jwtSecurity.getUserIdFromToken(request);
+        String email = jwtService.getEmailFromTokenRequest(request);
 
-        Result<ReimbursementDTO> createResult = reimbursementService.createReimbursement(reimbursementInsertDTO, userId);
+        Result<ReimbursementDTO> createResult = reimbursementService.createReimbursement(reimbursementInsertDTO, email);
         if (!createResult.isSuccess()){
             return ResponseEntity.status(createResult.getStatus()).body(ResponseWrapper.badRequest(createResult.getErrorMessage()));
         }

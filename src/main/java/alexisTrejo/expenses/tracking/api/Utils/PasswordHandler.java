@@ -1,4 +1,4 @@
-package alexisTrejo.expenses.tracking.api.Middleware;
+package alexisTrejo.expenses.tracking.api.Utils;
 
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
