@@ -6,6 +6,7 @@ import alexisTrejo.expenses.tracking.api.DTOs.User.UserDTO;
 import alexisTrejo.expenses.tracking.api.Mappers.UserMapper;
 import alexisTrejo.expenses.tracking.api.Models.User;
 import alexisTrejo.expenses.tracking.api.Repository.UserRepository;
+import alexisTrejo.expenses.tracking.api.Service.Factory.TestDataFactory;
 import alexisTrejo.expenses.tracking.api.Service.Implementations.UserServiceImpl;
 import alexisTrejo.expenses.tracking.api.Utils.Result;
 import alexisTrejo.expenses.tracking.api.Utils.enums.Role;
@@ -37,27 +38,13 @@ class UserServiceImplTest {
     private UserDTO testUserDTO;
     private UserInsertDTO testUserInsertDTO;
     private ProfileDTO testProfileDTO;
-    private final Long USER_ID = 1L;
-    private final String TEST_EMAIL = "test@example.com";
-    private final String TEST_PASSWORD = "password123";
 
     @BeforeEach
     void setUp() {
-        testUser = new User();
-        testUser.setId(USER_ID);
-        testUser.setEmail(TEST_EMAIL);
-        testUser.setPassword(TEST_PASSWORD);
-
-        testUserDTO = new UserDTO();
-        testUserDTO.setId(USER_ID);
-        testUserDTO.setEmail(TEST_EMAIL);
-
-        testUserInsertDTO = new UserInsertDTO();
-        testUserInsertDTO.setEmail(TEST_EMAIL);
-        testUserInsertDTO.setPassword(TEST_PASSWORD);
-
-        testProfileDTO = new ProfileDTO();
-        testProfileDTO.setEmail(TEST_EMAIL);
+        testUser = TestDataFactory.createUser();
+        testUserDTO = TestDataFactory.createUserDTO();
+        testUserInsertDTO = TestDataFactory.createUserInsertDTO();
+        testProfileDTO = TestDataFactory.createProfileDTO();
     }
 
     @Test
@@ -73,7 +60,7 @@ class UserServiceImplTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(TEST_EMAIL, result.getEmail());
+        assertEquals(testUserDTO.getEmail(), result.getEmail());
         verify(userRepository).saveAndFlush(any(User.class));
         verify(userMapper).insertDtoToEntity(testUserInsertDTO);
         verify(userMapper).entityToDTO(testUser);
@@ -82,72 +69,72 @@ class UserServiceImplTest {
     @Test
     void getUserById_WhenUserExists_ShouldReturnSuccessResult() {
         // Arrange
-        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(testUser));
+        when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
         when(userMapper.entityToDTO(testUser)).thenReturn(testUserDTO);
 
         // Act
-        Result<UserDTO> result = userService.getUserById(USER_ID);
+        Result<UserDTO> result = userService.getUserById(testUser.getId());
 
         // Assert
         assertTrue(result.isSuccess());
-        assertEquals(TEST_EMAIL, result.getData().getEmail());
-        verify(userRepository).findById(USER_ID);
+        assertEquals(testUser.getEmail(), result.getData().getEmail());
+        verify(userRepository).findById(testUser.getId());
     }
 
     @Test
     void getUserById_WhenUserDoesNotExist_ShouldReturnErrorResult() {
         // Arrange
-        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
+        when(userRepository.findById(testUser.getId())).thenReturn(Optional.empty());
 
         // Act
-        Result<UserDTO> result = userService.getUserById(USER_ID);
+        Result<UserDTO> result = userService.getUserById(testUser.getId());
 
         // Assert
         assertFalse(result.isSuccess());
         assertNotNull(result);
-        verify(userRepository).findById(USER_ID);
+        verify(userRepository).findById(testUser.getId());
     }
 
     @Test
     void getProfileById_WhenUserExists_ShouldReturnSuccessResult() {
         // Arrange
-        when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByEmail(testUser.getEmail())).thenReturn(Optional.of(testUser));
         when(userMapper.entityToProfileDTO(testUser)).thenReturn(testProfileDTO);
 
         // Act
-        Result<ProfileDTO> result = userService.getProfileById(TEST_EMAIL);
+        Result<ProfileDTO> result = userService.getProfileById(testUser.getEmail());
 
         // Assert
         assertTrue(result.isSuccess());
-        assertEquals(TEST_EMAIL, result.getData().getEmail());
-        verify(userRepository).findByEmail(TEST_EMAIL);
+        assertEquals(testUser.getEmail(), result.getData().getEmail());
+        verify(userRepository).findByEmail(testUser.getEmail());
     }
 
     @Test
     void getProfileById_WhenUserDoesNotExist_ShouldReturnErrorResult() {
         // Arrange
-        when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(testUser.getEmail())).thenReturn(Optional.empty());
 
         // Act
-        Result<ProfileDTO> result = userService.getProfileById(TEST_EMAIL);
+        Result<ProfileDTO> result = userService.getProfileById(testUser.getEmail());
 
         // Assert
         assertFalse(result.isSuccess());
-        verify(userRepository).findByEmail(TEST_EMAIL);
+        verify(userRepository).findByEmail(testUser.getEmail());
     }
 
     @Test
     void updateUser_WhenUserExists_ShouldReturnSuccessResult() {
         // Arrange
-        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(testUser));
+        when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
         when(userRepository.saveAndFlush(any(User.class))).thenReturn(testUser);
 
         // Act
-        Result<Void> result = userService.updateUser(USER_ID, testUserInsertDTO);
+        Result<Void> result = userService.updateUser(testUser.getId(), testUserInsertDTO);
 
         // Assert
         assertTrue(result.isSuccess());
-        verify(userRepository).findById(USER_ID);
+        verify(userRepository).findById(testUser.getId());
         verify(userMapper).updateUser(testUser, testUserInsertDTO);
         verify(userRepository).saveAndFlush(testUser);
     }
@@ -155,44 +142,44 @@ class UserServiceImplTest {
     @Test
     void updateUser_WhenUserDoesNotExist_ShouldReturnErrorResult() {
         // Arrange
-        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
+        when(userRepository.findById(testUser.getId())).thenReturn(Optional.empty());
 
         // Act
-        Result<Void> result = userService.updateUser(USER_ID, testUserInsertDTO);
+        Result<Void> result = userService.updateUser(testUser.getId(), testUserInsertDTO);
 
         // Assert
         assertFalse(result.isSuccess());
         assertNotNull(result);
-        verify(userRepository).findById(USER_ID);
+        verify(userRepository).findById(testUser.getId());
         verify(userRepository, never()).saveAndFlush(any());
     }
 
     @Test
     void deleteUserById_WhenUserExists_ShouldReturnSuccessResult() {
         // Arrange
-        when(userRepository.existsById(USER_ID)).thenReturn(true);
+        when(userRepository.existsById(testUser.getId())).thenReturn(true);
 
         // Act
-        Result<Void> result = userService.deleteUserById(USER_ID);
+        Result<Void> result = userService.deleteUserById(testUser.getId());
 
         // Assert
         assertTrue(result.isSuccess());
-        verify(userRepository).existsById(USER_ID);
-        verify(userRepository).deleteById(USER_ID);
+        verify(userRepository).existsById(testUser.getId());
+        verify(userRepository).deleteById(testUser.getId());
     }
 
     @Test
     void deleteUserById_WhenUserDoesNotExist_ShouldReturnErrorResult() {
         // Arrange
-        when(userRepository.existsById(USER_ID)).thenReturn(false);
+        when(userRepository.existsById(testUser.getId())).thenReturn(false);
 
         // Act
-        Result<Void> result = userService.deleteUserById(USER_ID);
+        Result<Void> result = userService.deleteUserById(testUser.getId());
 
         // Assert
         assertFalse(result.isSuccess());
         assertNotNull(result);
-        verify(userRepository).existsById(USER_ID);
+        verify(userRepository).existsById(testUser.getId());
         verify(userRepository, never()).deleteById(any());
     }
 }
