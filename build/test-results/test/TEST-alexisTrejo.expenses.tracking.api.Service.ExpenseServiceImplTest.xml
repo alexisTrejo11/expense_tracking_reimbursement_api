@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2025-01-22T01:28:21" hostname="alexiss-MacBook-Air.local" time="0.634">
+  <properties/>
+  <testcase name="createExpense_ShouldCreateAndReturnExpense()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.575"/>
+  <testcase name="rejectExpense_WhenExpenseIsPending_ShouldRejectAndReturn()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.004"/>
+  <testcase name="approveExpense_WhenExpenseIsPending_ShouldApproveAndReturn()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.004"/>
+  <testcase name="approveExpense_WhenExpenseNotPending_ShouldThrowException()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.004"/>
+  <testcase name="getExpenseByUserEmail_ShouldReturnPageOfExpenses()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.023"/>
+  <testcase name="validateApproveOrReject_WhenExpenseNotPending_ShouldThrowException()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.003"/>
+  <testcase name="softDeleteExpenseById_ShouldMarkExpenseAsDeleted()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.003"/>
+  <testcase name="validate_WhenAmountExceedsLimit_ShouldReturnError()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.002"/>
+  <testcase name="getExpenseById_WhenExpenseExists_ShouldReturnExpenseDTO()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.004"/>
+  <testcase name="getExpenseSummaryByDateRange_ShouldReturnSummary()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.003"/>
+  <testcase name="getAllExpenseByStatus_ShouldReturnPageOfExpenses()" classname="alexisTrejo.expenses.tracking.api.Service.ExpenseServiceImplTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

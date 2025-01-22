@@ -31,10 +31,19 @@ ext {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.ai:spring-ai-postgresml-spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testImplementation 'org.mockito:mockito-junit-jupiter'
+
+
+	// Database
+	testImplementation 'com.h2database:h2'
+	implementation 'org.springframework.ai:spring-ai-postgresml-spring-boot-starter'
+
 
 	implementation 'commons-io:commons-io:2.11.0' //  file handling
 
@@ -70,6 +79,8 @@ dependencies {
 
 	// Migrations
 	implementation 'org.flywaydb:flyway-core:9.22.0'
+
+
 
 }
 

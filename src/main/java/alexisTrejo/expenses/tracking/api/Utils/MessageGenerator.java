@@ -1,5 +1,8 @@
 package alexisTrejo.expenses.tracking.api.Utils;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class MessageGenerator {
     public Result<Void> generateErrorMessage(String entityName, String action) {
         return Result.error(entityName + " " + action + " failed");
