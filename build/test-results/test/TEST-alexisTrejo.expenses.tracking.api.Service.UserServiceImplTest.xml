@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2025-01-22T02:02:01" hostname="alexiss-MacBook-Air.local" time="0.671">
+  <properties/>
+  <testcase name="deleteUserById_WhenUserDoesNotExist_ShouldReturnErrorResult()" classname="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" time="0.51"/>
+  <testcase name="updateUser_WhenUserExists_ShouldReturnSuccessResult()" classname="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" time="0.005"/>
+  <testcase name="getProfileById_WhenUserDoesNotExist_ShouldReturnErrorResult()" classname="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" time="0.005"/>
+  <testcase name="getUserById_WhenUserDoesNotExist_ShouldReturnErrorResult()" classname="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" time="0.004"/>
+  <testcase name="updateUser_WhenUserDoesNotExist_ShouldReturnErrorResult()" classname="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" time="0.002"/>
+  <testcase name="getUserById_WhenUserExists_ShouldReturnSuccessResult()" classname="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" time="0.004"/>
+  <testcase name="getProfileById_WhenUserExists_ShouldReturnSuccessResult()" classname="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" time="0.002"/>
+  <testcase name="deleteUserById_WhenUserExists_ShouldReturnSuccessResult()" classname="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" time="0.002"/>
+  <testcase name="createUser_ShouldCreateAndReturnUser()" classname="alexisTrejo.expenses.tracking.api.Service.UserServiceImplTest" time="0.133"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -80,7 +80,7 @@ class ExpenseServiceImplTest {
 
     @Test
     void getExpenseById_WhenExpenseExists_ShouldReturnExpenseDTO() {
-        when(expenseRepository.findById(EXPENSE_ID)).thenReturn(Optional.of(testExpense));
+            when(expenseRepository.findById(EXPENSE_ID)).thenReturn(Optional.of(testExpense));
         when(expenseMapper.entityToDTO(testExpense)).thenReturn(testExpenseDTO);
 
         ExpenseDTO result = expenseService.getExpenseById(EXPENSE_ID);
