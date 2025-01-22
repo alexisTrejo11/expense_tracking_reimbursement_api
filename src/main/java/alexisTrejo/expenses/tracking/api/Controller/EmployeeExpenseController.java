@@ -64,7 +64,7 @@ public class EmployeeExpenseController {
         String email = jwtService.getEmailFromRequest(request);
 
         Result<Void> validationResult = expenseService.validate(insertDTO);
-        if (validationResult.isSuccess()) {
+        if (!validationResult.isSuccess()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ResponseWrapper.badRequest(validationResult.getErrorMessage()));
         }
